@@ -30,6 +30,12 @@ export class PinchZoomDirective{
         this.elem = this.elementRef.nativeElement;
     }
 
+    @HostListener('window:resize', ['$event'])
+    onResize(event) {
+
+        this.transformElem(200); 
+    }
+
     @HostListener('touchstart', ['$event'])
     touchstartHandler(event) {
         this.elem.style.transformOrigin = '0 0';
@@ -93,11 +99,14 @@ export class PinchZoomDirective{
 
         if (img && this.scale > 1){
             let imgHeight = this.getElemHeight();
+            let imgWidth = this.getElemWidth();
             let imgOffsetTop = ((imgHeight - this.elem.offsetHeight) * this.scale) / 2;
 
             if (imgHeight * this.scale < window.innerHeight){
                 this.moveY = (window.innerHeight - this.elem.offsetHeight * this.scale) / 2;
 
+            } else if (imgWidth * this.scale < window.innerWidth) {
+                this.moveX = (window.innerWidth - this.elem.offsetWidth * this.scale) / 2;
             } else if (this.eventType == 'swipe') {
                 if (this.moveY > imgOffsetTop){
                     this.moveY = imgOffsetTop;
@@ -130,11 +139,11 @@ export class PinchZoomDirective{
     }
 
     getElemHeight(){
-        if (this.elem.getElementsByTagName("img")[0]){
-            return this.elem.getElementsByTagName("img")[0].offsetHeight;
-        } else {
-            return this.elem.offsetHeight;
-        }
+        return this.elem.getElementsByTagName("img")[0].offsetHeight;
+    }
+
+    getElemWidth(){
+        return this.elem.getElementsByTagName("img")[0].offsetWidth;
     }
 
     transformElem(duration: any = 50){

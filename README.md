@@ -1,4 +1,7 @@
-Angular2 pinch zoom directive.
+## Demo
+http://crystalui.org/components/pinch-zoom/live (use mobile device)
+
+![alt text](http://crystalui.org/assets/img/qr-pinch-zoom.png)
 
 ## Installation
 
@@ -25,6 +28,3 @@ Import module:
     <div pinch-zoom>
         <img src="/assets/example.jpg" width="100%" />
     </div>
-
-## Demo
-http://crystalui.org/components/pinch-zoom/example

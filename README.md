@@ -3,6 +3,8 @@ http://crystalui.org/components/pinch-zoom/live (use mobile device)
 
 ![alt text](http://crystalui.org/assets/img/qr-pinch-zoom.png)
 
+![alt text](http://crystalui.org/assets/img/pinch-zoom-animated-example.gif)
+
 ## Installation
 
 Install the npm package.

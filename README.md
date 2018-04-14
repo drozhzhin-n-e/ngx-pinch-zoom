@@ -24,3 +24,9 @@ Import module:
     <pinch-zoom height="100%">
         <img src="path_to_image" /> 
     </pinch-zoom>
+
+## Properties
+
+| name             | type                                | description                                                               |
+|------------------|-------------------------------------|---------------------------------------------------------------------------|
+| height           | string                              | Container height (in pixels or percentages).                              |

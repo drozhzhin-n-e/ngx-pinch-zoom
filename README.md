@@ -13,20 +13,14 @@ Install the npm package.
         
 Import module:
 
-    import { NgModule }         from '@angular/core';
-    import { BrowserModule }    from '@angular/platform-browser';
-    import { AppComponent }     from './app.component';
-    import { PinchZoomDirective } from 'ngx-pinch-zoom/components';
+    import { PinchZoomComponent } from 'ngx-pinch-zoom/components';
      
     @NgModule({
-        imports:      [ BrowserModule ],
-        declarations: [ AppComponent, PinchZoomDirective ],
-        bootstrap:    [ AppComponent ]
+        declarations: [ PinchZoomComponent ]
     })
-    export class AppModule { } 
 
 ## Usage
     
-    <div pinch-zoom>
-        <img src="/assets/example.jpg" width="100%" />
-    </div>
+    <pinch-zoom height="100%">
+        <img src="path_to_image" /> 
+    </pinch-zoom>

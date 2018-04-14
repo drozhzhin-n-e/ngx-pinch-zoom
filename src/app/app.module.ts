@@ -4,12 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 
 import { AppComponent } from './app.component';
-import { PinchZoomDirective } from './pinch-zoom.directive'; 
+import { PinchZoomComponent } from './pinch-zoom.component'; 
 
 @NgModule({
   declarations: [
     AppComponent,
-    PinchZoomDirective
+    PinchZoomComponent
   ],
   imports: [
     BrowserModule,

@@ -1,12 +1,14 @@
-import { Directive, ElementRef, HostListener } from '@angular/core';
+import { Component, HostBinding, ElementRef, HostListener, OnInit, ViewChild, Input } from '@angular/core';
 
-@Directive({
-    selector: '[pinch-zoom]'
+@Component({
+    selector: 'pinch-zoom, [pinch-zoom]',
+    templateUrl: './pinch-zoom.component.html'
 })
 
-export class PinchZoomDirective{
+export class PinchZoomComponent {
 
     elem: any;
+    parentElem: any;
     eventType: any;
 
     scale: any = 1;
@@ -25,14 +27,30 @@ export class PinchZoomDirective{
 
     distance: any;
     initialDistance: any;
+
+    tagName: string;
+
+    @Input('height') containerHeight: string;
+
+    @HostBinding('style.display') hostDisplay:string;
+    @HostBinding('style.overflow') hostOverflow:string;
+    @HostBinding('style.height') hostHeight:string;
+
+    @ViewChild('content') contentEl: ElementRef;
      
     constructor(private elementRef: ElementRef){
-        this.elem = this.elementRef.nativeElement;
+        this.tagName = this.elementRef.nativeElement.tagName.toLowerCase();
+    }
+
+    ngOnInit() {
+        this.elem = this.contentEl.nativeElement;
+        this.parentElem = this.elem.parentNode;
+
+        this.setBasicStyles();
     }
 
     @HostListener('window:resize', ['$event'])
     onResize(event) {
-
         this.transformElem(200); 
     }
 
@@ -98,20 +116,20 @@ export class PinchZoomDirective{
         } 
 
         if (img && this.scale > 1){
-            let imgHeight = this.getElemHeight();
-            let imgWidth = this.getElemWidth();
+            let imgHeight = this.getImageHeight();
+            let imgWidth = this.getImageWidth();
             let imgOffsetTop = ((imgHeight - this.elem.offsetHeight) * this.scale) / 2;
 
-            if (imgHeight * this.scale < window.innerHeight){
-                this.moveY = (window.innerHeight - this.elem.offsetHeight * this.scale) / 2;
+            if (imgHeight * this.scale < this.parentElem.offsetHeight){
+                this.moveY = (this.parentElem.offsetHeight - this.elem.offsetHeight * this.scale) / 2;
 
-            } else if (imgWidth * this.scale < window.innerWidth) {
-                this.moveX = (window.innerWidth - this.elem.offsetWidth * this.scale) / 2;
+            } else if (imgWidth * this.scale < this.parentElem.offsetWidth) {
+                this.moveX = (this.parentElem.offsetWidth - this.elem.offsetWidth * this.scale) / 2;
             } else if (this.eventType == 'swipe') {
                 if (this.moveY > imgOffsetTop){
                     this.moveY = imgOffsetTop;
-                } else if ((imgHeight * this.scale + Math.abs(imgOffsetTop) - window.innerHeight) + this.moveY < 0){
-                    this.moveY = - (imgHeight * this.scale + Math.abs(imgOffsetTop) - window.innerHeight);
+                } else if ((imgHeight * this.scale + Math.abs(imgOffsetTop) - this.parentElem.offsetHeight) + this.moveY < 0){
+                    this.moveY = - (imgHeight * this.scale + Math.abs(imgOffsetTop) - this.parentElem.offsetHeight);
                 }
             }
         }
@@ -138,12 +156,34 @@ export class PinchZoomDirective{
         return Math.sqrt( Math.pow(touches[0].pageX - touches[1].pageX, 2) + Math.pow(touches[0].pageY - touches[1].pageY, 2));
     }
 
-    getElemHeight(){
+    getImageHeight(){
         return this.elem.getElementsByTagName("img")[0].offsetHeight;
     }
 
-    getElemWidth(){
+    getImageWidth(){
         return this.elem.getElementsByTagName("img")[0].offsetWidth;
+    }
+
+    setBasicStyles():void {
+        this.elem.style.display = "flex";
+        this.elem.style.height = "100%";
+        this.elem.style.alignItems = "center";
+        this.elem.style.justifyContent = "center";
+
+        this.hostDisplay = "block";
+        this.hostOverflow = "hidden";
+        this.hostHeight = this.containerHeight;
+
+        this.setImageWidth();
+    }
+
+    setImageWidth():void {
+        let imgElem = this.elem.getElementsByTagName("img");
+
+        if (imgElem.length){
+            imgElem[0].style.maxWidth = '100%';
+            imgElem[0].style.maxHeight = '100%';
+        }
     }
 
     transformElem(duration: any = 50){

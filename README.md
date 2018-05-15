@@ -30,3 +30,9 @@ Import module:
 | name             | type                                | description                                                               |
 |------------------|-------------------------------------|---------------------------------------------------------------------------|
 | height           | string                              | Container height (in pixels or percentages).                              |
+
+## Sponsors
+
+We use Browserstack 
+
+[![Browserstack](http://crystalui.org/assets/img/browserstack-logo.png)](http://browserstack.com/)

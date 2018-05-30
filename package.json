@@ -1,5 +1,5 @@
 {
-  "name": "cui-pinch-app",
+  "name": "ngx-pinch-zoom",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -10,7 +10,6 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
-  "private": true,
   "dependencies": {
     "@angular/common": "^4.0.0",
     "@angular/compiler": "^4.0.0",

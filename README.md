@@ -23,7 +23,7 @@ Import module:
 	})
 
 ## Usage
-For use, put your image inside the <pinch-zoom> container. Please, pay attention to the parameters of your viewport metatag. If you use Pinch Zoom, it is required to limit zooming of a web-page, by entering the following parameters: <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">.
+For use, put your image inside the &lt;pinch-zoom&gt; container. Please, pay attention to the parameters of your viewport metatag. If you use Pinch Zoom, it is required to limit zooming of a web-page, by entering the following parameters: &lt;meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"&gt;.
 
 	<pinch-zoom>
 	    <img src="path_to_image" /> 

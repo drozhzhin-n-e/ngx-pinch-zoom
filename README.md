@@ -1,32 +1,55 @@
-## Demo
-http://crystalui.org/components/pinch-zoom/live (use mobile device)
+# Pinch zoom for Angular 2
 
-![alt text](http://crystalui.org/assets/img/qr-pinch-zoom.png)
+The module provides opportunities for image zooming in, zooming out and positioning with use of gestures on a touch screen. 
 
-![demo](src/assets/pinch-zoom-animated-example.gif)
+Live demos and source code samples can be found on [home page](http://crystalui.org/components/pinch-zoom).
+
+## GIF demo
+
+![demo](http://crystalui.org/assets/img/pinch-zoom-animated-example.gif)
 
 ## Installation
 
 Install the npm package.
 
-    npm i ngx-pinch-zoom
-        
+	npm i ngx-pinch-zoom
+
 Import module:
 
-    import { PinchZoomComponent } from 'ngx-pinch-zoom/components';
-     
-    @NgModule({
-        declarations: [ PinchZoomComponent ]
-    })
+	import { PinchZoomModule } from 'ngx-pinch-zoom';
+
+	@NgModule({
+	    imports: [ PinchZoomModule ]
+	})
 
 ## Usage
-    
-    <pinch-zoom height="100%">
-        <img src="path_to_image" /> 
-    </pinch-zoom>
+For use, put your image inside the <pinch-zoom> container. Please, pay attention to the parameters of your viewport metatag. If you use Pinch Zoom, it is required to limit zooming of a web-page, by entering the following parameters: <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">.
+
+	<pinch-zoom>
+	    <img src="path_to_image" /> 
+	</pinch-zoom>
 
 ## Properties
 
-| name             | type                                | description                                                               |
-|------------------|-------------------------------------|---------------------------------------------------------------------------|
-| height           | string                              | Container height (in pixels or percentages).                              |
+| name             | type            | default | description                                 |
+|------------------|-----------------|---------|---------------------------------------------|
+| placement        | string          | auto    | Container height (in pixels or percentages).|
+| transition-duration | number       | 200     | Defines the speed of the animation of positioning and transforming.|
+| auto-zoom-out    | boolean         | false   | Automatic restoration of the original size of an image after its zooming in by two fingers.|
+
+## Events
+
+| name             | type                      | description                                 |
+|------------------|---------------------------|---------------------------------------------|
+| touchstart       | {type: "touchstart"}      | The touchstart event is fired when one or more touch points are placed on the touch surface.|
+| touchend         | {type: "touchend"}        | The touchend event is fired when one or more touch points are removed from the touch surface.|
+| swipe            | {type: "swipe", moveX: number, moveY: number} | Swipe event is opened, when a user shifts a zoomed image in any direction by a finger.|
+| pinch            | {type: "pinch"}           | Pinch event is opened, when a user zooms an image in or out by two fingers.|
+
+Perhaps you will be interested in the expanded properties, methods and events of the [commercial version](http://crystalui.org/components/pinch-zoom).
+
+## Sponsors
+
+We use Browserstack for cross-browser testing.
+
+[![Browserstack](http://crystalui.org/assets/img/browserstack-logo.png)](http://browserstack.com/)

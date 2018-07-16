@@ -6,7 +6,7 @@ Live demos and source code samples can be found on [home page](http://crystalui.
 
 ## GIF demo
 
-![demo](http://crystalui.org/assets/img/pinch-zoom-animated-example.gif)
+![demo](http://crystalui.org/assets/video/pinch-zoon--basic-usage.gif)
 
 ## Installation
 

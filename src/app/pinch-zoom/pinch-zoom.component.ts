@@ -38,6 +38,10 @@ export class PinchZoomComponent {
 
     @Input('height') containerHeight: string;
     @Input('transition-duration') transitionDuration: number = 200;
+    @Input('double-tap') doubleTap: boolean = true;
+    @Input('zoom-button') zoomButton: boolean = true;
+    @Input('linear-horizontal-swipe') linearHorizontalSwipe: boolean = false;
+    @Input('linear-vertical-swipe') linearVerticalSwipe: boolean = false;
     @Input('auto-zoom-out') autoZoomOut: boolean = false;
     @Input('id') set id(value: any) {
         this._id = value;
@@ -78,7 +82,58 @@ export class PinchZoomComponent {
     ngOnInit() {
         this.element = this.contentElement.nativeElement;
         this.parentElement = this.elementRef.nativeElement;
+
         this.setBasicStyles();
+
+        this.element.ondragstart = function() {
+            return false;
+        };
+    }
+
+
+    /*
+     * Desktop listeners
+     */
+
+    @HostListener("mousedown", ['$event'])
+    onMouseEnter(event: MouseEvent) {
+        this.getElementPosition();
+
+        if (this.isDragging) {
+            this.draggingMode = true;
+        }
+    }
+
+    @HostListener("window:mousemove", ['$event'])
+    onMouseMove(event: MouseEvent) {
+        if (this.draggingMode){
+            event.preventDefault();
+
+            if (!this.eventType){
+                this.startX = event.clientX - this.elementPosition.left;
+                this.startY = event.clientY - this.elementPosition.top;
+            }
+
+            this.eventType = 'swipe';
+            this.events.emit({
+                type: 'swipe',
+                moveX: this.moveX,
+                moveY: this.moveY
+            });
+
+            this.moveX = this.initialMoveX + ((event.clientX - this.elementPosition.left) - this.startX);
+            this.moveY = this.initialMoveY + ((event.clientY - this.elementPosition.top) - this.startY);
+
+            this.centeringImage();
+            this.transformElement(0);
+        }
+    }
+
+    @HostListener("window:mouseup", ['$event'])
+    onMouseUp(event: MouseEvent) {
+        this.draggingMode = false;
+        this.updateInitialValues();
+        this.eventType = '';
     }
 
 
@@ -99,6 +154,7 @@ export class PinchZoomComponent {
         if (!this.eventType){
             this.startX = event.touches[0].clientX - this.elementPosition.left;
             this.startY = event.touches[0].clientY - this.elementPosition.top;
+
             this.startClientX = event.touches[0].clientX - this.elementPosition.left;
             this.startClientY = event.touches[0].clientY - this.elementPosition.top;
         }
@@ -113,6 +169,11 @@ export class PinchZoomComponent {
         // Swipe
         if (this.detectSwipe(touches) || this.eventType == 'swipe'){
             this.handleSwipe(event);
+        }
+
+        // Linear swipe
+        if (this.detectLinearSwipe(touches) || this.eventType == 'horizontal-swipe' || this.eventType == 'vertical-swipe'){   
+            this.handleLinearSwipe(event); 
         }
 
         // Pinch
@@ -137,6 +198,13 @@ export class PinchZoomComponent {
         }
 
         this.events.emit({type: 'touchend'});
+
+        // Double Tap
+        if (this.doubleTapDetection() && !this.eventType){
+            this.toggleZoom(event);
+            this.events.emit({type: 'double-tap'});
+            return;
+        }
 
         if (this.eventType === 'pinch' || this.eventType === 'swipe'){
             this.alignImage();
@@ -189,6 +257,7 @@ export class PinchZoomComponent {
 
         if (!this.eventType){
             this.initialDistance = this.getDistance(touches);
+
             this.moveXC = (((event.touches[0].clientX - this.elementPosition.left) + (event.touches[1].clientX - this.elementPosition.left)) / 2) - this.initialMoveX;
             this.moveYC = (((event.touches[0].clientY - this.elementPosition.top) + (event.touches[1].clientY - this.elementPosition.top)) / 2) - this.initialMoveY;
         }
@@ -197,15 +266,66 @@ export class PinchZoomComponent {
         this.events.emit({type: 'pinch'});
         this.distance = this.getDistance(touches);
         this.scale = this.initialScale * (this.distance / this.initialDistance);
+
         this.moveX = this.initialMoveX - (((this.distance / this.initialDistance) * this.moveXC) - this.moveXC);
         this.moveY = this.initialMoveY - (((this.distance / this.initialDistance) * this.moveYC) - this.moveYC);
 
         this.transformElement(0);
     }
 
+    handleLinearSwipe(event:any){
+        if (this.linearVerticalSwipe){
+            event.preventDefault();
+        }
+        
+        this.i++;
+
+        if (this.i > 3){
+            this.eventType = this.getLinearSwipeType(event);
+        }
+
+        if (this.eventType == 'horizontal-swipe'){
+            this.moveX = this.initialMoveX + ((event.touches[0].clientX - this.elementPosition.left) - this.startX);
+            this.moveY = 0;
+        }
+
+        if (this.eventType == 'vertical-swipe'){
+            this.moveX = 0;
+            this.moveY = this.initialMoveY + ((event.touches[0].clientY - this.elementPosition.top) - this.startY);
+        }
+
+        if (this.eventType){
+            this.events.emit({
+                type: this.eventType,
+                moveX: this.moveX,
+                moveY: this.moveY
+            });
+            this.transformElement(0);
+        }
+    }
+
 
     detectSwipe(touches:any){
         return touches.length === 1 && this.scale > 1 && !this.eventType;
+    }
+
+    detectLinearSwipe(touches:TouchList){
+        return touches.length === 1 && this.scale === 1 && !this.eventType;
+    }
+
+    getLinearSwipeType(event:any):string {
+        if (this.eventType != 'horizontal-swipe' && this.eventType != 'vertical-swipe'){
+            let movementX = Math.abs((event.touches[0].clientX - this.elementPosition.left) - this.startClientX); 
+            let movementY = Math.abs((event.touches[0].clientY - this.elementPosition.top) - this.startClientY);
+
+            if ((movementY * 3) > movementX) {
+                return this.linearVerticalSwipe ? 'vertical-swipe' : '';
+            } else {
+                return this.linearHorizontalSwipe ? 'horizontal-swipe' : '';
+            }
+        } else {
+            return this.eventType;
+        }
     }
 
     getDistance(touches: any){
@@ -226,6 +346,7 @@ export class PinchZoomComponent {
         this.element.style.alignItems = "center";
         this.element.style.justifyContent = "center";
         this.element.style.transformOrigin = '0 0';
+
         this.hostDisplay = "block";
         this.hostOverflow = "hidden";
         this.hostHeight = this.containerHeight;
@@ -245,6 +366,51 @@ export class PinchZoomComponent {
     transformElement(duration: any = 50){
         this.element.style.transition = 'all '+ duration +'ms';
         this.element.style.transform = 'matrix('+ Number(this.scale) +','+ 0 +','+ 0 +','+ Number(this.scale) +','+ Number(this.moveX) +','+ Number(this.moveY) +')';
+    }
+
+    doubleTapDetection():boolean {
+        if (!this.doubleTap){
+            return false;
+        }
+
+        let currentTime = new Date().getTime();
+        let tapLength = currentTime - this.lastTap;
+        
+        clearTimeout(this.doubleTapTimeout);
+
+        if (tapLength < 300 && tapLength > 0) {
+            return true;
+        } else {
+            this.doubleTapTimeout = setTimeout(function() {
+                clearTimeout(this.doubleTapTimeout);
+            }, 300);
+        }
+        this.lastTap = currentTime;
+    }
+
+    public toggleZoom(event:any = false):void {
+        if (this.initialScale === 1){
+
+            if (event && event.changedTouches){
+                let changedTouches = event.changedTouches;
+
+                this.scale = this.initialScale * 2;
+                this.moveX = this.initialMoveX - (changedTouches[0].clientX - this.elementPosition.left);
+                this.moveY = this.initialMoveY - (changedTouches[0].clientY - this.elementPosition.top);
+            } else {
+                this.scale = this.initialScale * 2;
+                this.moveX = this.initialMoveX - this.element.offsetWidth / 2;
+                this.moveY = this.initialMoveY - this.element.offsetHeight / 2;
+            }
+
+            this.centeringImage();
+            this.updateInitialValues();
+            this.transformElement(this.transitionDuration);
+            this.events.emit({type: 'zoom-in'});
+        } else {
+            this.resetScale();
+            this.events.emit({type: 'zoom-out'});
+        }
     }
 
     resetScale():void {
@@ -329,5 +495,15 @@ export class PinchZoomComponent {
 
     getElementPosition():void {
         this.elementPosition = this.elementRef.nativeElement.getBoundingClientRect();
+    }
+
+    public setMoveX(value:number, transitionDuration:number = 200){
+        this.moveX = value;
+        this.transformElement(transitionDuration);
+    }
+
+    public setMoveY(value:number, transitionDuration:number = 200){
+        this.moveY = value;
+        this.transformElement(transitionDuration);
     }
 }

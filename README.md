@@ -4,10 +4,6 @@ The module provides opportunities for image zooming in, zooming out and position
 
 Live demos and source code samples can be found on [home page](http://crystalui.org/components/pinch-zoom).
 
-## GIF demo
-
-![demo](http://crystalui.org/assets/video/pinch-zoon--basic-usage.gif)
-
 ## Installation
 
 Install the npm package.

@@ -1,0 +1,7 @@
+.div-test, .div-test img {
+  width: 100%;
+}
+
+.div-test img {
+  height: auto;
+}

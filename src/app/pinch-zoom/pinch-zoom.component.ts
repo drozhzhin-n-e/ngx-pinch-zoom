@@ -49,13 +49,13 @@ export class PinchZoomComponent implements OnInit {
     doubleTapTimeout: any;
     initialDistance: number;
 
-    @Input() containerHeight: string;
-    @Input() transitionDuration = 200;
-    @Input() doubleTap = true;
-    @Input() zoomButton = true;
-    @Input() linearHorizontalSwipe = false;
-    @Input() linearVerticalSwipe = false;
-    @Input() autoZoomOut = false;
+    @Input('height') containerHeight: string;
+    @Input('transition-duration') transitionDuration = 200;
+    @Input('double-tap') doubleTap = true;
+    @Input('zoom-button') zoomButton = true;
+    @Input('linear-horizontal-swipe') linearHorizontalSwipe = false;
+    @Input('linear-vertical-swipe') linearVerticalSwipe = false;
+    @Input('auto-zoom-out') autoZoomOut = false;
     @Input()
     set id(value: any) {
         this._id = value;

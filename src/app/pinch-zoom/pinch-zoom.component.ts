@@ -63,6 +63,7 @@ export class PinchZoomComponent implements OnInit {
     get id() {
         return this._id;
     }
+    @Input('zoomFactor') zoomFactor = 2;
 
     @Output() events: EventEmitter<any> = new EventEmitter<any>();
 
@@ -423,11 +424,11 @@ export class PinchZoomComponent implements OnInit {
             if (event && event.changedTouches) {
                 const changedTouches = event.changedTouches;
 
-                this.scale = this.initialScale * 2;
+                this.scale = this.initialScale * this.zoomFactor;
                 this.moveX = this.initialMoveX - (changedTouches[0].clientX - this.elementPosition.left);
                 this.moveY = this.initialMoveY - (changedTouches[0].clientY - this.elementPosition.top);
             } else {
-                this.scale = this.initialScale * 2;
+                this.scale = this.initialScale * this.zoomFactor;
                 this.moveX = this.initialMoveX - this.element.offsetWidth / 2;
                 this.moveY = this.initialMoveY - this.element.offsetHeight / 2;
             }

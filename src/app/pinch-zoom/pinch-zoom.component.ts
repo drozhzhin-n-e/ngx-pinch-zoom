@@ -63,7 +63,7 @@ export class PinchZoomComponent implements OnInit {
     get id() {
         return this._id;
     }
-    @Input('zoomFactor') zoomFactor = 2;
+    @Input('zoom-factor') zoomFactor = 2;
 
     @Output() events: EventEmitter<any> = new EventEmitter<any>();
 

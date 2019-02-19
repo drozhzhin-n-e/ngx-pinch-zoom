@@ -4,7 +4,7 @@
 </div>
 
 <div class="pz-zoom-button"
-	*ngIf="zoomButton && !isMobile"
+	*ngIf="zoomButton && !isTouchScreen"
 	(click)="toggleZoom()"
 	[class.pz-zoom-out]="scale > 1">
 </div>

@@ -52,6 +52,7 @@ export class PinchZoomComponent implements OnInit {
     @Input('height') containerHeight: string;
     @Input('transition-duration') transitionDuration = 200;
     @Input('double-tap') doubleTap = true;
+    @Input('double-tap-scale') doubleTapScale = 2;
     @Input('zoom-button') zoomButton = true;
     @Input('linear-horizontal-swipe') linearHorizontalSwipe = false;
     @Input('linear-vertical-swipe') linearVerticalSwipe = false;
@@ -436,11 +437,11 @@ export class PinchZoomComponent implements OnInit {
             if (event && event.changedTouches) {
                 const changedTouches = event.changedTouches;
 
-                this.scale = this.initialScale * 2;
-                this.moveX = this.initialMoveX - (changedTouches[0].clientX - this.elementPosition.left);
-                this.moveY = this.initialMoveY - (changedTouches[0].clientY - this.elementPosition.top);
+                this.scale = this.initialScale * this.doubleTapScale;
+                this.moveX = this.initialMoveX - (changedTouches[0].clientX * (this.doubleTapScale - 1) - this.elementPosition.left);
+                this.moveY = this.initialMoveY - (changedTouches[0].clientY * (this.doubleTapScale - 1) - this.elementPosition.top);
             } else {
-                this.scale = this.initialScale * 2;
+                this.scale = this.initialScale * this.doubleTapScale;
                 this.moveX = this.initialMoveX - this.element.offsetWidth / 2;
                 this.moveY = this.initialMoveY - this.element.offsetHeight / 2;
             }

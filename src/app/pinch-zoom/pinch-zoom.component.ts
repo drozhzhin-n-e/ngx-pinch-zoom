@@ -301,9 +301,12 @@ export class PinchZoomComponent implements OnInit {
         }
 
         this.eventType = 'pinch';
-        this.events.emit({ type: 'pinch' });
         this.distance = this.getDistance(touches);
         this.scale = this.initialScale * (this.distance / this.initialDistance);
+        this.events.emit({ 
+            type: 'pinch', 
+            scale: this.scale 
+        });
 
         this.moveX = this.initialMoveX - (((this.distance / this.initialDistance) * this.moveXC) - this.moveXC);
         this.moveY = this.initialMoveY - (((this.distance / this.initialDistance) * this.moveYC) - this.moveYC);

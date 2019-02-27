@@ -134,6 +134,41 @@
           }
         }
       }
+    },
+    "ngx-pinch-zoom": {
+      "root": "projects/ngx-pinch-zoom",
+      "sourceRoot": "projects/ngx-pinch-zoom/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/ngx-pinch-zoom/tsconfig.lib.json",
+            "project": "projects/ngx-pinch-zoom/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-pinch-zoom/src/test.ts",
+            "tsConfig": "projects/ngx-pinch-zoom/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-pinch-zoom/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ngx-pinch-zoom/tsconfig.lib.json",
+              "projects/ngx-pinch-zoom/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "pinchAppNg7"

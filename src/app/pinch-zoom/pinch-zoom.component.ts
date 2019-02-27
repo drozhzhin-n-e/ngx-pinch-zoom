@@ -57,6 +57,7 @@ export class PinchZoomComponent implements OnInit {
     @Input('linear-horizontal-swipe') linearHorizontalSwipe = false;
     @Input('linear-vertical-swipe') linearVerticalSwipe = false;
     @Input('auto-zoom-out') autoZoomOut = false;
+    @Input('limit-zoom') limitZoom: number = 2;
     @Input()
     set id(value: any) {
         this._id = value;
@@ -223,6 +224,11 @@ export class PinchZoomComponent implements OnInit {
             this.scale = 1;
         }
 
+        // Limit Zoom
+        if (this.limitZoom && this.eventType === 'pinch') {
+            this.handleLimitZoom();
+        }
+
         this.events.emit({ type: 'touchend' });
 
         // Double Tap
@@ -346,6 +352,29 @@ export class PinchZoomComponent implements OnInit {
         }
     }
 
+    handleLimitZoom(){
+        if (this.scale > this.limitZoom){
+            console.log('this.scale', this.scale);
+            const difference = this.scale - this.limitZoom;
+            const differenceRatio = difference / this.scale;
+            console.log('difference', difference);
+            console.log('differenceRatio', differenceRatio);
+
+            this.scale = this.limitZoom;
+            console.log('this.moveX', this.moveX);
+            console.log('this.moveY', this.moveY);
+
+            this.moveX = this.moveX * differenceRatio;
+            this.moveY = this.moveY * differenceRatio;
+            console.log('this.moveX', this.moveX);
+            console.log('this.moveY', this.moveY);
+
+            this.centeringImage();
+            //this.updateInitialValues();
+            this.transformElement(this.transitionDuration);
+        }
+    }
+
 
     detectSwipe(touches: any): boolean {
         return touches.length === 1 && this.scale > 1 && !this.eventType;
@@ -441,7 +470,7 @@ export class PinchZoomComponent implements OnInit {
                 this.moveX = this.initialMoveX - (changedTouches[0].clientX * (this.doubleTapScale - 1) - this.elementPosition.left);
                 this.moveY = this.initialMoveY - (changedTouches[0].clientY * (this.doubleTapScale - 1) - this.elementPosition.top);
             } else {
-                this.scale = this.initialScale * this.doubleTapScale;
+                this.scale = this.initialScale * 2;
                 this.moveX = this.initialMoveX - this.element.offsetWidth / 2;
                 this.moveY = this.initialMoveY - this.element.offsetHeight / 2;
             }

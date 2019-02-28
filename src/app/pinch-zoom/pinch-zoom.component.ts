@@ -57,7 +57,7 @@ export class PinchZoomComponent implements OnInit {
     @Input('linear-horizontal-swipe') linearHorizontalSwipe = false;
     @Input('linear-vertical-swipe') linearVerticalSwipe = false;
     @Input('auto-zoom-out') autoZoomOut = false;
-    @Input('limit-zoom') limitZoom: number = 2;
+    @Input('limit-zoom') limitZoom;
     @Input()
     set id(value: any) {
         this._id = value;
@@ -224,11 +224,6 @@ export class PinchZoomComponent implements OnInit {
             this.scale = 1;
         }
 
-        // Limit Zoom
-        if (this.limitZoom && this.eventType === 'pinch') {
-            //this.handleLimitZoom();
-        }
-
         this.events.emit({ type: 'touchend' });
 
         // Double Tap
@@ -236,6 +231,11 @@ export class PinchZoomComponent implements OnInit {
             this.toggleZoom(event);
             this.events.emit({ type: 'double-tap' });
             return;
+        }
+
+        // Limit Zoom
+        if (this.limitZoom && this.eventType === 'pinch') {
+            this.handleLimitZoom();
         }
 
         if (this.eventType === 'pinch' || this.eventType === 'swipe') {
@@ -354,23 +354,23 @@ export class PinchZoomComponent implements OnInit {
 
     handleLimitZoom(){
         if (this.scale > this.limitZoom){
-            console.log('this.scale', this.scale);
-            const difference = this.scale - this.limitZoom;
-            const differenceRatio = difference / this.scale;
-            console.log('difference', difference);
-            console.log('differenceRatio', differenceRatio);
+            const imageWidth = this.getImageWidth();
+            const imageHeight = this.getImageHeight();
+            const enlargedImageWidth = imageWidth * this.scale;
+            const enlargedImageHeight = imageHeight * this.scale;
+
+            const moveXRatio = this.moveX / (enlargedImageWidth - imageWidth);
+            const moveYRatio = this.moveY / (enlargedImageHeight - imageHeight);
 
             this.scale = this.limitZoom;
-            console.log('this.moveX', this.moveX);
-            console.log('this.moveY', this.moveY);
 
-            this.moveX = this.moveX * differenceRatio;
-            this.moveY = this.moveY * differenceRatio;
-            console.log('this.moveX', this.moveX);
-            console.log('this.moveY', this.moveY);
+            const newImageWidth = imageWidth * this.scale;
+            const newImageHeight = imageHeight * this.scale;
+
+            this.moveX = -Math.abs((moveXRatio * (newImageWidth - imageWidth)));
+            this.moveY = -Math.abs((-moveYRatio * (newImageHeight - imageHeight)));
 
             this.centeringImage();
-            //this.updateInitialValues();
             this.transformElement(this.transitionDuration);
         }
     }

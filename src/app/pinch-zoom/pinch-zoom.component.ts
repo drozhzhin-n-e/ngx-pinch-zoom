@@ -387,7 +387,7 @@ export class PinchZoomComponent implements OnInit {
     getLinearSwipeType(event: any): string {
         if (this.eventType !== 'horizontal-swipe' && this.eventType !== 'vertical-swipe') {
             const movementX = Math.abs(this.moveLeft(0, event.touches) - this.startClientX);
-            const movementY = Math.abs(this.moveTop(1, event.touches) - this.startClientY);
+            const movementY = Math.abs(this.moveTop(0, event.touches) - this.startClientY);
 
             if ((movementY * 3) > movementX) {
                 return this.linearVerticalSwipe ? 'vertical-swipe' : '';

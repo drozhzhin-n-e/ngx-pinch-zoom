@@ -226,7 +226,7 @@ export class PinchZoomComponent implements OnInit {
 
         // Limit Zoom
         if (this.limitZoom && this.eventType === 'pinch') {
-            this.handleLimitZoom();
+            //this.handleLimitZoom();
         }
 
         this.events.emit({ type: 'touchend' });

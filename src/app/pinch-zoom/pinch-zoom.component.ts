@@ -162,9 +162,8 @@ export class PinchZoomComponent implements OnInit {
     touchstartHandler(event): void {
         this.getElementPosition();
 
-        if (!this.eventType) {
-            this.startX = event.touches[0].clientX - this.elementPosition.left;
-            this.startY = event.touches[0].clientY - this.elementPosition.top;
+        if (this.eventType === undefined) {
+            this.getStartPosition(event);
         }
 
         this.events.emit({ type: 'touchstart' });
@@ -183,11 +182,14 @@ export class PinchZoomComponent implements OnInit {
         if (this.detectLinearSwipe(touches) ||
             this.eventType === 'horizontal-swipe' ||
             this.eventType === 'vertical-swipe') {
+
             this.handleLinearSwipe(event);
         }
 
         // Pinch
-        if (touches.length === 2 && !this.eventType || this.eventType === 'pinch') {
+        if ((touches.length === 2 && this.eventType === undefined) || 
+            this.eventType === 'pinch') {
+
             this.handlePinch(event);
         }
     }
@@ -198,6 +200,7 @@ export class PinchZoomComponent implements OnInit {
         this.draggingMode = false;
         const touches = event.touches;
 
+        // Min scale
         if (this.scale < 1) {
             this.scale = 1;
         }
@@ -207,10 +210,11 @@ export class PinchZoomComponent implements OnInit {
             this.scale = 1;
         }
 
+        // Emit event
         this.events.emit({ type: 'touchend' });
 
         // Double Tap
-        if (this.doubleTapDetection() && !this.eventType) {
+        if (this.doubleTapDetection() && this.eventType === undefined) {
             this.toggleZoom(event);
             this.events.emit({ type: 'double-tap' });
             return;
@@ -221,14 +225,17 @@ export class PinchZoomComponent implements OnInit {
             this.handleLimitZoom();
         }
 
+        // Align image
         if (this.eventType === 'pinch' || this.eventType === 'swipe') {
             this.alignImage();
         }
 
+        // Update initial values
         if (this.eventType === 'pinch' ||
             this.eventType === 'swipe' ||
             this.eventType === 'horizontal-swipe' ||
             this.eventType === 'vertical-swipe') {
+
             this.updateInitialValues();
         }
 
@@ -392,6 +399,11 @@ export class PinchZoomComponent implements OnInit {
 
     getImageWidth(): number {
         return this.element.getElementsByTagName(this.elementTarget)[0].offsetWidth;
+    }
+
+    getStartPosition(event): void {
+        this.startX = event.touches[0].clientX - this.elementPosition.left;
+        this.startY = event.touches[0].clientY - this.elementPosition.top;
     }
 
     setBasicStyles(): void {

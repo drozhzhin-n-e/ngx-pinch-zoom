@@ -10,6 +10,8 @@ import {
     Output
 } from '@angular/core';
 
+type EventType = 'swipe' | 'pinch' | 'horizontal-swipe' | 'vertical-swipe' | 'touchend';
+
 @Component({
     selector: 'pinch-zoom, [pinch-zoom]',
     templateUrl: './pinch-zoom.component.html',
@@ -18,35 +20,26 @@ import {
 
 export class PinchZoomComponent implements OnInit {
 
-    i = 0;
-
-    scale = 1;
-    initialScale = 1;
-
-    _id: any;
-    element: any;
-    elementTarget: any;
-    elementPosition: any;
-    parentElement: any;
-    eventType: any;
-
+    i: number = 0;
+    scale: number = 1;
+    initialScale: number = 1;
+    element;
+    elementTarget;
+    elementPosition;
+    parentElement;
+    eventType: EventType;
     startX: number;
     startY: number;
-    startClientX: number;
-    startClientY: number;
-
-    moveX: any = 0;
-    moveY: any = 0;
-    initialMoveX: any = 0;
-    initialMoveY: any = 0;
+    moveX: number = 0;
+    moveY: number = 0;
+    initialMoveX: number = 0;
+    initialMoveY: number = 0;
     moveXC: number;
     moveYC: number;
-
     lastTap = 0;
-    draggingMode = false;
-
+    draggingMode: boolean = false;
     distance: number;
-    doubleTapTimeout: any;
+    doubleTapTimeout;
     initialDistance: number;
 
     @Input('height') containerHeight: string;
@@ -57,14 +50,7 @@ export class PinchZoomComponent implements OnInit {
     @Input('linear-horizontal-swipe') linearHorizontalSwipe = false;
     @Input('linear-vertical-swipe') linearVerticalSwipe = false;
     @Input('auto-zoom-out') autoZoomOut = false;
-    @Input('limit-zoom') limitZoom;
-    @Input()
-    set id(value: any) {
-        this._id = value;
-    }
-    get id() {
-        return this._id;
-    }
+    @Input('limit-zoom') limitZoom: number;
 
     @Output() events: EventEmitter<any> = new EventEmitter<any>();
 
@@ -158,7 +144,7 @@ export class PinchZoomComponent implements OnInit {
     onMouseUp(event: MouseEvent): void {
         this.draggingMode = false;
         this.updateInitialValues();
-        this.eventType = '';
+        this.eventType = undefined;
     }
 
 
@@ -173,22 +159,19 @@ export class PinchZoomComponent implements OnInit {
     }
 
     @HostListener('touchstart', ['$event'])
-    touchstartHandler(event: any): void {
+    touchstartHandler(event): void {
         this.getElementPosition();
 
         if (!this.eventType) {
             this.startX = event.touches[0].clientX - this.elementPosition.left;
             this.startY = event.touches[0].clientY - this.elementPosition.top;
-
-            this.startClientX = event.touches[0].clientX - this.elementPosition.left;
-            this.startClientY = event.touches[0].clientY - this.elementPosition.top;
         }
 
         this.events.emit({ type: 'touchstart' });
     }
 
     @HostListener('touchmove', ['$event'])
-    touchmoveHandler(event: any): void {
+    touchmoveHandler(event): void {
         const touches = event.touches;
 
         // Swipe
@@ -210,7 +193,7 @@ export class PinchZoomComponent implements OnInit {
     }
 
     @HostListener('touchend', ['$event'])
-    touchendHandler(event: any): void {
+    touchendHandler(event): void {
         this.i = 0;
         this.draggingMode = false;
         const touches = event.touches;
@@ -252,7 +235,7 @@ export class PinchZoomComponent implements OnInit {
         this.eventType = 'touchend';
 
         if (touches && touches.length === 0) {
-            this.eventType = '';
+            this.eventType = undefined;
         }
     }
 
@@ -269,7 +252,7 @@ export class PinchZoomComponent implements OnInit {
         return touches[index].clientY - this.elementPosition.top;
     }
 
-    handleSwipe(event: any): void {
+    handleSwipe(event): void {
         event.preventDefault();
 
         if (!this.eventType) {
@@ -290,7 +273,7 @@ export class PinchZoomComponent implements OnInit {
         this.transformElement(0);
     }
 
-    handlePinch(event: any): void {
+    handlePinch(event): void {
         event.preventDefault();
 
         const touches = event.touches;
@@ -321,7 +304,7 @@ export class PinchZoomComponent implements OnInit {
         this.transformElement(0);
     }
 
-    handleLinearSwipe(event: any): void {
+    handleLinearSwipe(event): void {
         if (this.linearVerticalSwipe) {
             event.preventDefault();
         }
@@ -352,7 +335,7 @@ export class PinchZoomComponent implements OnInit {
         }
     }
 
-    handleLimitZoom(){
+    handleLimitZoom(): void {
         if (this.scale > this.limitZoom){
             const imageWidth = this.getImageWidth();
             const imageHeight = this.getImageHeight();
@@ -376,7 +359,7 @@ export class PinchZoomComponent implements OnInit {
     }
 
 
-    detectSwipe(touches: any): boolean {
+    detectSwipe(touches: TouchList): boolean {
         return touches.length === 1 && this.scale > 1 && !this.eventType;
     }
 
@@ -384,30 +367,30 @@ export class PinchZoomComponent implements OnInit {
         return touches.length === 1 && this.scale === 1 && !this.eventType;
     }
 
-    getLinearSwipeType(event: any): string {
+    getLinearSwipeType(event): EventType {
         if (this.eventType !== 'horizontal-swipe' && this.eventType !== 'vertical-swipe') {
-            const movementX = Math.abs(this.moveLeft(0, event.touches) - this.startClientX);
-            const movementY = Math.abs(this.moveTop(0, event.touches) - this.startClientY);
+            const movementX = Math.abs(this.moveLeft(0, event.touches) - this.startX);
+            const movementY = Math.abs(this.moveTop(0, event.touches) - this.startY);
 
             if ((movementY * 3) > movementX) {
-                return this.linearVerticalSwipe ? 'vertical-swipe' : '';
+                return this.linearVerticalSwipe ? 'vertical-swipe' : undefined;
             } else {
-                return this.linearHorizontalSwipe ? 'horizontal-swipe' : '';
+                return this.linearHorizontalSwipe ? 'horizontal-swipe' : undefined;
             }
         } else {
             return this.eventType;
         }
     }
 
-    getDistance(touches: any) {
+    getDistance(touches: TouchList) {
         return Math.sqrt(Math.pow(touches[0].pageX - touches[1].pageX, 2) + Math.pow(touches[0].pageY - touches[1].pageY, 2));
     }
 
-    getImageHeight(): any {
+    getImageHeight(): number {
         return this.element.getElementsByTagName(this.elementTarget)[0].offsetHeight;
     }
 
-    getImageWidth(): any {
+    getImageWidth(): number {
         return this.element.getElementsByTagName(this.elementTarget)[0].offsetWidth;
     }
 
@@ -434,7 +417,7 @@ export class PinchZoomComponent implements OnInit {
         }
     }
 
-    transformElement(duration: any = 50) {
+    transformElement(duration: number = 50) {
         this.element.style.transition = `all ${duration}ms`;
         this.element.style.transform = `
             matrix(${Number(this.scale)}, 0, 0, ${Number(this.scale)}, ${Number(this.moveX)}, ${Number(this.moveY)})`;
@@ -569,12 +552,12 @@ export class PinchZoomComponent implements OnInit {
         this.elementPosition = this.elementRef.nativeElement.getBoundingClientRect();
     }
 
-    public setMoveX(value: number, transitionDuration: number = 200) {
+    public setMoveX(value: number, transitionDuration: number = 200): void {
         this.moveX = value;
         this.transformElement(transitionDuration);
     }
 
-    public setMoveY(value: number, transitionDuration: number = 200) {
+    public setMoveY(value: number, transitionDuration: number = 200): void {
         this.moveY = value;
         this.transformElement(transitionDuration);
     }

@@ -4,6 +4,8 @@ The module provides opportunities for image zooming in, zooming out and position
 
 Live demos and source code samples can be found on [home page](http://crystalui.org/components/pinch-zoom).
 
+🔬️ Help make Pinch zoom better by [answering a few questions](https://docs.google.com/forms/d/e/1FAIpQLSfDW_yLcKTlRzhUy3PMAFMgmsmy9cNyeML8hQ8rOgM3PEIKGA/viewform?usp=sf_link).
+
 ## Installation
 
 Install the npm package.

@@ -38,6 +38,7 @@ For use, put your image inside the &lt;pinch-zoom&gt; container. Please, pay att
 | zoom-button      | boolean         | true    | Show the button for zooming in or zooming out of an image (available in desktop mode).|
 | linear-horizontal-swipe | boolean  | false   | Switches on the support of horizontal swipe. It allows shifting an image horizontally, when it hasn’t been zoomed in.|
 | linear-vertical-swipe | boolean    | false   | Switches on the support of vertical swipe. It allows shifting an image vertically, when it hasn’t been zoomed in.|
+| scalable         | boolean         | false   | Indicated whether to have the ability to set the zoom scale. (2 zoom buttons + slider)|
 
 ## Methods
 

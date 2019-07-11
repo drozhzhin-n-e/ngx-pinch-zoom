@@ -121,8 +121,9 @@ export class PinchZoomComponent implements OnInit {
 
     @HostListener('window:mousemove', ['$event'])
     onMouseMove(event: MouseEvent): void {
-        const targetIsZoomButton = [this.zoomInButton.nativeElement, this.zoomOutButton.nativeElement].indexOf(event.target) >= 0;
-        if (this.draggingMode && !this.scalingMode && !targetIsZoomButton) {
+        const zoomingMode = this.scalable === true &&
+                            [this.zoomInButton.nativeElement, this.zoomOutButton.nativeElement].indexOf(event.target) >= 0;
+        if (this.draggingMode && !this.scalingMode && !zoomingMode) {
             event.preventDefault();
 
             if (!this.eventType) {
@@ -460,64 +461,7 @@ export class PinchZoomComponent implements OnInit {
         this.lastTap = currentTime;
     }
 
-    zoom(zoomIn: boolean): void {
-        const imgWidth = this.getImageWidth();
-        const imgHeight = this.getImageHeight();
-        const type = zoomIn ? 'zoom-in' : 'zoom-out';
-
-        this.setNewScale(zoomIn);
-        this.setPositionIntelligently(imgWidth, imgHeight);
-        this.removeOutOfFrameOffset(imgWidth, imgHeight);
-
-        this.updateInitialValues();
-        this.transformElement(this.transitionDuration);
-        this.events.emit({ type });
-    }
-
-    private setNewScale(increment: boolean): void {
-        const scale = this.scale;
-        if (increment) {
-            if (scale < 10) {
-                this.scale++;
-            }
-        }
-        else {
-            if (scale > 1) {
-                this.scale--;
-            }
-        }
-    }
-
-    private removeOutOfFrameOffset(imgWidth: number, imgHeight: number): void {
-        const maxX = imgWidth * (1 - this.scale);
-        const maxY = imgHeight * (1 - this.scale);
-
-        if (this.moveX > 0) {
-            this.moveX = 0;
-        }
-        if (this.moveY > 0) {
-            this.moveY = 0;
-        }
-        if (this.moveX < maxX) {
-            this.moveX = maxX;
-        }
-        if (this.moveY < maxY) {
-            this.moveY = maxY;
-        }
-    }
-
-    private setPositionIntelligently(imgWidth: number, imgHeight: number): void {
-        const factor = this.scale / this.initialScale;
-        const prevCenteredMoveX = (1 - this.initialScale) / 2 * imgWidth;
-        const prevCenteredMoveY = (1 - this.initialScale) / 2 * imgHeight;
-        const offsetX = (this.initialMoveX - prevCenteredMoveX) * factor;
-        const offsetY = (this.initialMoveY - prevCenteredMoveY) * factor;
-
-        this.moveX = ((1 - this.scale) / 2 * imgWidth) + offsetX;
-        this.moveY = ((1 - this.scale) / 2 * imgHeight) + offsetY;
-    }
-
-    toggleZoom(event: any = false): void {
+    public toggleZoom(event: any = false): void {
         if (this.initialScale === 1) {
 
             if (event && event.changedTouches) {
@@ -540,28 +484,6 @@ export class PinchZoomComponent implements OnInit {
             this.resetScale();
             this.events.emit({ type: 'zoom-out' });
         }
-    }
-
-    onScale(event: { target: HTMLInputElement }): void {
-        const imgWidth = this.getImageWidth();
-        const imgHeight = this.getImageHeight();
-        const newScale = +event.target.value;
-        const isZoomIn = newScale > this.initialScale;
-        const type = isZoomIn ? 'zoom-in' : 'zoom-out';
-
-        this.scale = +event.target.value;
-        this.setPositionIntelligently(imgWidth, imgHeight);
-        if (!isZoomIn) {
-            this.removeOutOfFrameOffset(imgWidth, imgHeight);
-        }
-
-        this.updateInitialValues();
-        this.transformElement(this.transitionDuration);
-        this.events.emit({ type });
-    }
-
-    onClickSlider(scaling: boolean): void {
-        this.scalingMode = scaling;
     }
 
     resetScale(): void {
@@ -656,5 +578,83 @@ export class PinchZoomComponent implements OnInit {
     public setMoveY(value: number, transitionDuration: number = 200): void {
         this.moveY = value;
         this.transformElement(transitionDuration);
+    }
+
+    public zoom(zoomIn: boolean): void {
+        const imgWidth = this.getImageWidth();
+        const imgHeight = this.getImageHeight();
+        const type = zoomIn ? 'zoom-in' : 'zoom-out';
+
+        this.setScale(zoomIn);
+        this.setPosition(imgWidth, imgHeight);
+        this.restrictXYPosition(imgWidth, imgHeight);
+
+        this.updateInitialValues();
+        this.transformElement(this.transitionDuration);
+        this.events.emit({ type });
+    }
+
+    public onScale(event: { target: HTMLInputElement }): void {
+        const imgWidth = this.getImageWidth();
+        const imgHeight = this.getImageHeight();
+        const newScale = +event.target.value;
+        const isZoomIn = newScale > this.initialScale;
+        const type = isZoomIn ? 'zoom-in' : 'zoom-out';
+
+        this.scale = +event.target.value;
+        this.setPosition(imgWidth, imgHeight);
+        if (!isZoomIn) {
+            this.restrictXYPosition(imgWidth, imgHeight);
+        }
+
+        this.updateInitialValues();
+        this.transformElement(this.transitionDuration);
+        this.events.emit({ type });
+    }
+
+    public onClickSlider(scaling: boolean): void {
+        this.scalingMode = scaling;
+    }
+
+    private setScale(increment: boolean): void {
+        const scale = this.scale;
+        if (increment) {
+            if (scale < 10) {
+                this.scale++;
+            }
+        } else {
+            if (scale > 1) {
+                this.scale--;
+            }
+        }
+    }
+
+    private setPosition(imgWidth: number, imgHeight: number): void {
+        const factor = this.scale / this.initialScale;
+        const prevCenteredMoveX = (1 - this.initialScale) / 2 * imgWidth;
+        const prevCenteredMoveY = (1 - this.initialScale) / 2 * imgHeight;
+        const offsetX = (this.initialMoveX - prevCenteredMoveX) * factor;
+        const offsetY = (this.initialMoveY - prevCenteredMoveY) * factor;
+
+        this.moveX = ((1 - this.scale) / 2 * imgWidth) + offsetX;
+        this.moveY = ((1 - this.scale) / 2 * imgHeight) + offsetY;
+    }
+
+    private restrictXYPosition(imgWidth: number, imgHeight: number): void {
+        const maxX = imgWidth * (1 - this.scale);
+        const maxY = imgHeight * (1 - this.scale);
+
+        if (this.moveX > 0) {
+            this.moveX = 0;
+        }
+        if (this.moveY > 0) {
+            this.moveY = 0;
+        }
+        if (this.moveX < maxX) {
+            this.moveX = maxX;
+        }
+        if (this.moveY < maxY) {
+            this.moveY = maxY;
+        }
     }
 }

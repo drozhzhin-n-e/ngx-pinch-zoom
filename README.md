@@ -61,7 +61,7 @@ For use, put your image inside the &lt;pinch-zoom&gt; container. Please, pay att
 | zoom-in          | {type: "zoom-in"}         | Zoom-in event is opened, when an image is zoomed in by the button (zoom icon with "+") or by toggleZoom method.|
 | zoom-out         | {type: "zoom-out"}        | Zoom-in event is opened, when an image is zoomed out by the button (zoom icon with "-") or by toggleZoom method.|
 | horizontal-swipe | {type: "horizontal-swipe", moveX: number} | Horizontal swipe event is opened, when a user moves the finger horizontally.|
-| vertical-swipe   | {type: "vertical-swipe", moveY: number} | Vertical swipe event is opened, when a user moves the finger vertically.|       | {type: "pinch"}           | Pinch event is opened, when a user zooms an image in or out by two fingers.|
+| vertical-swipe   | {type: "vertical-swipe", moveY: number} | Vertical swipe event is opened, when a user moves the finger vertically.|
 
 
 ## Sponsors

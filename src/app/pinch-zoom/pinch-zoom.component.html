@@ -3,8 +3,34 @@
 	<ng-content></ng-content>
 </div>
 
-<div class="pz-zoom-button"
-	*ngIf="zoomButton && !isTouchScreen"
-	(click)="toggleZoom()"
-	[class.pz-zoom-out]="scale > 1">
-</div>
+<div *ngIf="scalable; then scaleBlock else toggleZoomBlock"></div>
+
+<ng-template #scaleBlock>
+	<div class="scale-elements-container">
+		<div #zoomOutButton class="pz-zoom-button pz-zoom-out pz-zoom-button-left"
+			*ngIf="zoomButton && !isTouchScreen"
+			(click)="zoom(false)">
+		</div>
+		<div class="slider-container">
+			<input type="range" min="1" max="10" [value]="scale" class="slider"
+				(input)="onScale($event)"
+				(change)="onScale($event)"
+				(mousedown)="onClickSlider(true)"
+				(mouseup)="onClickSlider(false)"/>
+		</div>
+		<div #zoomInButton class="pz-zoom-button pz-zoom-button-right"
+			*ngIf="zoomButton && !isTouchScreen"
+			(click)="zoom(true)">
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #toggleZoomBlock>
+	<div class="pz-zoom-button"
+		*ngIf="zoomButton && !isTouchScreen"
+		(click)="toggleZoom()"
+		[class.pz-zoom-out]="scale > 1">
+	</div>
+</ng-template>
+
+

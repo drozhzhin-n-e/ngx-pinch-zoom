@@ -51,6 +51,7 @@ export class PinchZoomComponent implements OnInit {
     @Input('linear-vertical-swipe') linearVerticalSwipe = false;
     @Input('auto-zoom-out') autoZoomOut = false;
     @Input('limit-zoom') limitZoom: number;
+    @Input('disabled') disabled: boolean = false;
 
     @Output() events: EventEmitter<any> = new EventEmitter<any>();
 
@@ -160,6 +161,10 @@ export class PinchZoomComponent implements OnInit {
 
     @HostListener('touchstart', ['$event'])
     touchstartHandler(event): void {
+        if (this.disabled) {
+            return;
+        }
+        
         this.getElementPosition();
 
         if (this.eventType === undefined) {
@@ -171,6 +176,10 @@ export class PinchZoomComponent implements OnInit {
 
     @HostListener('touchmove', ['$event'])
     touchmoveHandler(event): void {
+        if (this.disabled) {
+            return;
+        }
+
         const touches = event.touches;
 
         // Swipe
@@ -196,6 +205,10 @@ export class PinchZoomComponent implements OnInit {
 
     @HostListener('touchend', ['$event'])
     touchendHandler(event): void {
+        if (this.disabled) {
+            return;
+        }
+
         this.i = 0;
         this.draggingMode = false;
         const touches = event.touches;

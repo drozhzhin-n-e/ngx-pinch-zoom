@@ -52,6 +52,7 @@ export class PinchZoomComponent implements OnInit {
     @Input('auto-zoom-out') autoZoomOut = false;
     @Input('limit-zoom') limitZoom: number;
     @Input('disabled') disabled: boolean = false;
+    @Input('allow-scroll') allowScroll: boolean = false;
 
     @Output() events: EventEmitter<any> = new EventEmitter<any>();
 
@@ -273,7 +274,9 @@ export class PinchZoomComponent implements OnInit {
     }
 
     handleSwipe(event): void {
-        event.preventDefault();
+        if (!this.allowScroll) {
+            event.preventDefault();
+        }
 
         if (!this.eventType) {
             this.startX = event.touches[0].clientX - this.elementPosition.left;

@@ -3,11 +3,14 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.sass']
 })
 export class AppComponent {
-
-  handlePinchZoomEvents(event){
-    console.log(event);
-  }
+	myProperties = {
+		"double-tap-scale": 3
+	}
+	
+	handlePinchZoomEvents(event){
+		console.log(event);
+	}
 }

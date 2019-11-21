@@ -1,5 +1,7 @@
 :host {
     position: relative;
+    overflow: hidden;
+    display: block;
 }
 
 .pz-dragging {

@@ -59,9 +59,19 @@ export class Touches {
         for (var listener in listeners) {
             const handler: MouseHandler = listeners[listener];
             if (listener === 'mouseup' || listener === "mousemove") {
-                document[action](listener, this[handler], false);
+                if (action === 'addEventListener') {
+                    document.addEventListener(listener, this[handler], false);
+                }
+                if (action === 'removeEventListener') {
+                    document.removeEventListener(listener, this[handler], false);
+                }
             } else {
-                this.element[action](listener, this[handler], false);
+                if (action === 'addEventListener') {
+                    this.element.addEventListener(listener, this[handler], false);
+                }
+                if (action === 'removeEventListener') {
+                    this.element.removeEventListener(listener, this[handler], false);
+                }
             }
         }
     }

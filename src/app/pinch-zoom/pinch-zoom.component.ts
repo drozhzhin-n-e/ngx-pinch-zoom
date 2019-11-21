@@ -38,6 +38,7 @@ export class PinchZoomComponent implements OnDestroy {
     @Input('auto-zoom-out') autoZoomOut = false;
     @Input('limit-zoom') limitZoom: number;
     @Input('disabled') disabled: boolean = false;
+    @Input('allow-scroll') allowScroll: boolean = false;
 
     @Output() events: EventEmitter<any> = new EventEmitter<any>();
 

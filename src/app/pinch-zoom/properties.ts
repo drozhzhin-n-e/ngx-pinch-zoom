@@ -2,11 +2,14 @@ export const defaultProperties = {
     transitionDuration: 200,
     doubleTap: true,
     doubleTapScale: 2,
-    zoomButton: true,
-    zoomButtonScale: 2,
-    autoZoomOut: false,
     limitZoom: 3,
-    disabled: false
+    autoZoomOut: false,
+    disabled: false,
+    overflow: "hidden",
+    zoomControlScale: 1,
+    backgroundColor: "rgba(0,0,0,0.85)",
+    minScale: 0,
+    disableZoomControl: "auto"
 }
 
 export const backwardCompatibilityProperties = {

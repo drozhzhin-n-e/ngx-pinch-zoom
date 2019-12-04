@@ -5,17 +5,21 @@ export interface IvyPinchProperties {
     key?: string;
     doubleTap?: boolean;
     doubleTapScale?: number;
-    zoomButtonScale?: number;
+    zoomControlScale?: number;
     transitionDuration?: number;
     autoZoomOut?: boolean;
     limitZoom?: number;
+    disablePan?: boolean;
+    limitPan?: boolean;
+    minScale?: number;
 }
 
 export const IvyPinchDefaultProperties = {
     doubleTap: true,
     doubleTapScale: 2,
     transitionDuration: 200,
-    limitZoom: 3
+    limitZoom: 3,
+    minScale: 0
 }
 
 export class IvyPinch { 
@@ -157,7 +161,7 @@ export class IvyPinch {
      */
 
     handlePan = (event: any) => {
-        if (this.scale <= 1) {
+        if (this.scale <= 1 || this.properties.disablePan) {
             return;
         }
 
@@ -172,6 +176,11 @@ export class IvyPinch {
         this.eventType = 'pan';
         this.moveX = this.initialMoveX + (this.moveLeft(event, 0) - this.startX);
         this.moveY = this.initialMoveY + (this.moveTop(event, 0) - this.startY);
+
+        if (this.properties.limitPan) {
+            this.limitPanY();
+            this.limitPanX();
+        } 
 
         /* mousemove */
         if (event.type === "mousemove") {
@@ -212,36 +221,45 @@ export class IvyPinch {
             this.moveX = this.initialMoveX - (((this.distance / this.initialDistance) * this.moveXC) - this.moveXC);
             this.moveY = this.initialMoveY - (((this.distance / this.initialDistance) * this.moveYC) - this.moveYC);
 
-            this.handleLimitZoom();
+            if (this.properties.limitZoom || this.properties.minScale > 0){
+                this.handleLimitZoom();
+            }
+
+            if (this.properties.limitPan) {
+                this.limitPanY();
+                this.limitPanX();
+            } 
 
             this.emitEvent({name: 'pinch', detail: { scale: this.scale }});
             this.transformElement(0);
         }
     }
 
-    handleLimitZoom(): void {
-        if (this.properties.limitZoom === undefined){
-            return;
-        }
+    handleLimitZoom() {
+        const limitZoom = this.properties.limitZoom;
+        const minScale = this.properties.minScale;
 
-        if (this.scale > this.properties.limitZoom){
+        if (this.scale > limitZoom || this.scale <= minScale){
             const imageWidth = this.getImageWidth();
             const imageHeight = this.getImageHeight();
             const enlargedImageWidth = imageWidth * this.scale;
             const enlargedImageHeight = imageHeight * this.scale;
-
             const moveXRatio = this.moveX / (enlargedImageWidth - imageWidth);
             const moveYRatio = this.moveY / (enlargedImageHeight - imageHeight);
 
-            this.scale = this.properties.limitZoom;
+            if (this.scale > limitZoom) {
+                this.scale = limitZoom;
+            } 
+
+            if (this.scale <= minScale) {
+                this.scale = minScale;
+            } 
 
             const newImageWidth = imageWidth * this.scale;
             const newImageHeight = imageHeight * this.scale;
 
             this.moveX = -Math.abs((moveXRatio * (newImageWidth - imageWidth)));
             this.moveY = -Math.abs((-moveYRatio * (newImageHeight - imageHeight)));
-
-            this.transformElement(this.properties.transitionDuration);
         }
     }
 
@@ -273,8 +291,8 @@ export class IvyPinch {
         }
 
         if (img) {
-            this.transitionYRestriction();
-            this.transitionXRestriction();
+            this.limitPanY();
+            this.limitPanX();
         }
         if (img && this.scale < 1) {
             if (this.moveX < this.element.offsetWidth * (1 - this.scale)) {
@@ -285,34 +303,40 @@ export class IvyPinch {
         return initialMoveX !== this.moveX || initialMoveY !== this.moveY;
     }
 
-    transitionYRestriction() {
+    limitPanY() {
         const imgHeight = this.getImageHeight();
+        const scaledImgHeight = imgHeight * this.scale;
+        const parentHeight = this.parentElement.offsetHeight;
+        const elementHeight = this.element.offsetHeight;
 
-        if (imgHeight * this.scale < this.parentElement.offsetHeight) {
-            this.moveY = (this.parentElement.offsetHeight - this.element.offsetHeight * this.scale) / 2;
+        if (scaledImgHeight < parentHeight) {
+            this.moveY = (parentHeight - elementHeight * this.scale) / 2;
         } else {
-            const imgOffsetTop = ((imgHeight - this.element.offsetHeight) * this.scale) / 2;
+            const imgOffsetTop = ((imgHeight - elementHeight) * this.scale) / 2;
 
             if (this.moveY > imgOffsetTop) {
                 this.moveY = imgOffsetTop;
-            } else if ((imgHeight * this.scale + Math.abs(imgOffsetTop) - this.parentElement.offsetHeight) + this.moveY < 0) {
-                this.moveY = -(imgHeight * this.scale + Math.abs(imgOffsetTop) - this.parentElement.offsetHeight);
+            } else if ((scaledImgHeight + Math.abs(imgOffsetTop) - parentHeight) + this.moveY < 0) {
+                this.moveY = -(scaledImgHeight + Math.abs(imgOffsetTop) - parentHeight);
             }
         }
     }
 
-    transitionXRestriction() {
+    limitPanX() {
         const imgWidth = this.getImageWidth();
+        const scaledImgWidth = imgWidth * this.scale;
+        const parentWidth = this.parentElement.offsetWidth;
+        const elementWidth = this.element.offsetWidth;
 
-        if (imgWidth * this.scale < this.parentElement.offsetWidth) {
-            this.moveX = (this.parentElement.offsetWidth - this.element.offsetWidth * this.scale) / 2;
+        if (scaledImgWidth < parentWidth) {
+            this.moveX = (parentWidth - elementWidth * this.scale) / 2;
         } else {
-            const imgOffsetLeft = ((imgWidth - this.element.offsetWidth) * this.scale) / 2;
+            const imgOffsetLeft = ((imgWidth - elementWidth) * this.scale) / 2;
 
             if (this.moveX > imgOffsetLeft) {
                 this.moveX = imgOffsetLeft;
-            } else if ((imgWidth * this.scale + Math.abs(imgOffsetLeft) - this.parentElement.offsetWidth) + this.moveX < 0) {
-                this.moveX = -(imgWidth * this.scale + Math.abs(imgOffsetLeft) - this.parentElement.offsetWidth);
+            } else if ((scaledImgWidth + Math.abs(imgOffsetLeft) - parentWidth) + this.moveX < 0) {
+                this.moveX = -(imgWidth * this.scale + Math.abs(imgOffsetLeft) - parentWidth);
             }
         }
     }
@@ -326,12 +350,29 @@ export class IvyPinch {
         this.setImageWidth();
     }
 
+    removeBasicStyles() {
+        this.element.style.display = '';
+        this.element.style.alignItems = '';
+        this.element.style.justifyContent = '';
+        this.element.style.transformOrigin = '';
+        this.removeImageWidth();
+    }
+
     setImageWidth() {
         const imgElement = this.element.getElementsByTagName(this.elementTarget);
 
         if (imgElement.length) {
             imgElement[0].style.maxWidth = '100%';
             imgElement[0].style.maxHeight = '100%';
+        }
+    }
+
+    removeImageWidth() {
+        const imgElement = this.element.getElementsByTagName(this.elementTarget);
+
+        if (imgElement.length) {
+            imgElement[0].style.maxWidth = '';
+            imgElement[0].style.maxHeight = '';
         }
     }
 
@@ -381,11 +422,13 @@ export class IvyPinch {
     }
 
     getImageHeight() {
-        return this.element.offsetHeight;
+        const img = this.element.getElementsByTagName(this.elementTarget)[0];
+        return img.offsetHeight;
     }
 
     getImageWidth() {
-        return this.element.offsetWidth;
+        const img = this.element.getElementsByTagName(this.elementTarget)[0];
+        return img.offsetWidth;
     }
 
     transformElement(duration: any) {
@@ -411,6 +454,10 @@ export class IvyPinch {
     }
 
     isDragging() {
+        if (this.properties.disablePan) {
+            return false;
+        }
+
         const imgHeight = this.getImageHeight();
         const imgWidth = this.getImageWidth();
 
@@ -439,7 +486,7 @@ export class IvyPinch {
                 this.moveX = this.initialMoveX - (changedTouches[0].clientX - this.elementPosition.left) * (this.properties.doubleTapScale - 1);
                 this.moveY = this.initialMoveY - (changedTouches[0].clientY - this.elementPosition.top) * (this.properties.doubleTapScale - 1);
             } else {
-                this.scale = this.initialScale * this.properties.zoomButtonScale;
+                this.scale = this.initialScale * (this.properties.zoomControlScale + 1);
                 this.moveX = this.initialMoveX - this.element.offsetWidth * (this.scale - 1) / 2;
                 this.moveY = this.initialMoveY - this.element.offsetHeight * (this.scale - 1) / 2;
             }
@@ -461,5 +508,10 @@ export class IvyPinch {
             this.updateInitialValues();
             this.transformElement(this.properties.transitionDuration);
         }
+    }
+
+    destroy() {
+        this.removeBasicStyles();
+        this.touches.destroy();
     }
 }

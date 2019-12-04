@@ -1,10 +1,9 @@
-<div class="pinch-zoom-content" 
-	[class.pz-dragging]="isDragging">
+<div class="pinch-zoom-content" [class.pz-dragging]="isDragging">
 	<ng-content></ng-content>
 </div>
 
-<div class="pz-zoom-button"
-	*ngIf="isZoomButton && !isTouchScreen && !isDisabled"
-	(click)="toggleZoom()"
-	[class.pz-zoom-out]="scale > 1">
-</div>
+<!-- Control: one button -->
+<div class="pz-zoom-button pz-zoom-control-position-bottom" 
+	[class.pz-zoom-button-out]="isZoomedIn" 
+	*ngIf="isControl()" 
+	(click)="toggleZoom()"></div>

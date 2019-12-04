@@ -32,17 +32,24 @@ For use, put your image inside the &lt;pinch-zoom&gt; container. Please, pay att
 | name             | type            | default | description                                 |
 |------------------|-----------------|---------|---------------------------------------------|
 | transition-duration | number       | 200     | Defines the speed of the animation of positioning and transforming.|
+| limit-zoom       | number          | 3       | Limit the maximum available scale. |
+| minScale         | number          | 0       | Limit the minimum acceptable scale. With a value of 1, it is recommended to use this parameter with `limitPan` |
 | auto-zoom-out    | boolean         | false   | Automatic restoration of the original size of an image after its zooming in by two fingers.|
 | double-tap       | boolean         | true    | Zooming in and zooming out of an image, depending on its current condition, with double tap.|
-| zoom-button      | boolean         | true    | Show the button for zooming in or zooming out of an image (available in desktop mode).|
-| disabled | boolean    | false   | Disable zoom.|
+| disabled         | boolean         | false   | Disable zoom. |
+| disablePan       | boolean         | false   | Turn off panning with one finger. |
+| overflow         | "hidden", "visible" | "hidden" | `hidden` - the overflow is clipped, and the rest of the content will be invisible. `visible` - the overflow is not clipped. The content renders outside the element's box. |
+| disableZoomControl | "disable", "never", "auto" | "auto" | Disable zoom controls. `auto` - Disable zoom controls on touch screen devices. `never` - show zoom controls on all devices. `disable` - disable zoom controls on all devices. |
+| zoomControlScale | number          | 1       | Zoom factor when using zoom controls. |
+| backgroundColor  | string          | "rgba(0,0,0,0.85)" | The background color of the container. |
+| limitPan         | boolean         | false   | Stop panning when the edge of the image reaches the edge of the screen. |
 
 ## Methods
 
 | name                    | description                                 |
 |-------------------------|---------------------------------------------|
 | toggleZoom()            | Image zooming in and out, depending on its current state. |
-| alignImage()            | Ranging the elements by pressing them to the edge of the parental element. |
+| destroy()               | Unsubscribe from mouse events and touches, as well as remove added styles from the DOM tree. |
 
 ## Events
 

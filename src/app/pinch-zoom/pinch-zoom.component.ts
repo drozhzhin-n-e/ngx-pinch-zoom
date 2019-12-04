@@ -8,18 +8,15 @@ import {IvyPinch} from './ivypinch';
 
 @Component({
 	selector: 'pinch-zoom',
-	templateUrl: './pinch-zoom.component.html',
-    styleUrls: ['./pinch-zoom.component.css']
+    exportAs: 'pinchZoom',
+    templateUrl: './pinch-zoom.component.html',
+    styleUrls: ['./pinch-zoom.component.sass']
 })
 
 export class PinchZoomComponent implements OnDestroy {
 
     pinchZoom: any;
     _properties: Properties;
-
-    get isZoomButton() {
-        return this.properties["zoomButton"];
-    }
 
     @Input('properties') set properties(value: Properties) {
         if (value) {
@@ -33,17 +30,27 @@ export class PinchZoomComponent implements OnDestroy {
     @Input('transition-duration') transitionDuration = 200;
     @Input('double-tap') doubleTap = true;
     @Input('double-tap-scale') doubleTapScale = 2;
-    @Input('zoom-button') zoomButton = true;
-    @Input('zoom-button-scale') zoomButtonScale = 2;
     @Input('auto-zoom-out') autoZoomOut = false;
     @Input('limit-zoom') limitZoom: number;
     @Input('disabled') disabled: boolean = false;
-    @Input('allow-scroll') allowScroll: boolean = false;
+    @Input() disablePan: boolean;
+    @Input() overflow: "hidden" | "visible";
+    @Input() zoomControlScale: number = 1;
+    @Input() disableZoomControl: "disable" | "never" | "auto";
+    @Input() backgroundColor: string = "rgba(0,0,0,0.85)";
+    @Input() limitPan: boolean;
+    @Input() minScale: number = 0;
 
     @Output() events: EventEmitter<any> = new EventEmitter<any>();
 
-    @HostBinding('style.display') hostDisplay: string = "block";
-    @HostBinding('style.overflow') hostOverflow: string = "hidden";
+    @HostBinding('style.overflow')
+    get hostOverflow() {
+        return this.properties['overflow'];
+    }
+    @HostBinding('style.background-color')
+    get hostBackgroundColor() {
+        return this.properties['backgroundColor'];
+    }
 
     get isTouchScreen() {
         var prefixes = ' -webkit- -moz- -o- -ms- '.split(' ');
@@ -62,24 +69,23 @@ export class PinchZoomComponent implements OnDestroy {
     }
 
     get isDragging() {
-        if (this.pinchZoom) {
-            return this.pinchZoom.isDragging();
-        }
+        return this.pinchZoom.isDragging();
     }
 
     get isDisabled() {
-        if (this.properties) {
-            return this.properties.disabled;
-        }
+        return this.properties['disabled'];
     }
 
     get scale() {
-        if (this.pinchZoom) {
-            return this.pinchZoom.scale;
-        }
+        return this.pinchZoom.scale;
+    }
+
+    get isZoomedIn() {
+        return this.scale > 1;
     }
 
     constructor(private elementRef: ElementRef) {
+        console.log("this.properties", this.properties);
         this.applyOptionsDefault(defaultProperties, {});
     }
 
@@ -95,15 +101,17 @@ export class PinchZoomComponent implements OnDestroy {
     }
 
     ngOnDestroy() {
-
+        this.destroy();
     }
 
     initPinchZoom() {
-        if (this.properties.disabled) {
+        if (this.properties['disabled']) {
             return;
         }
 
-        this.properties.element = this.elementRef.nativeElement.querySelector('.pinch-zoom-content');
+        console.log("this.properties", this.properties);
+
+        this.properties['element'] = this.elementRef.nativeElement.querySelector('.pinch-zoom-content');
         this.pinchZoom = new IvyPinch(this.properties);
     }
 
@@ -138,5 +146,25 @@ export class PinchZoomComponent implements OnDestroy {
 
     toggleZoom() {
         this.pinchZoom.toggleZoom();
+    }
+
+    isControl() {
+        if (this.isDisabled) {
+            return false;
+        }
+
+        if (this.properties['disableZoomControl'] === "disable") {
+            return false;
+        }
+
+        if (this.isTouchScreen && this.properties['disableZoomControl'] === "auto") {
+            return false;
+        }
+
+        return true;
+    }
+
+    public destroy() {
+        this.pinchZoom.destroy();
     }
 }

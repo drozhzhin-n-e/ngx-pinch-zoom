@@ -194,7 +194,7 @@ export class Touches {
     /* Mousemove */
 
     handleMousemove = (event: any) => {
-        event.preventDefault();
+        //event.preventDefault();
         
         if (!this.isMousedown) {
             return;

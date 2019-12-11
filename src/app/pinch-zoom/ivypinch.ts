@@ -2,16 +2,17 @@ import {Touches} from './touches';
 
 export interface IvyPinchProperties {
     element: string;
-    key?: string;
-    doubleTap?: boolean;
-    doubleTapScale?: number;
-    zoomControlScale?: number;
-    transitionDuration?: number;
-    autoZoomOut?: boolean;
-    limitZoom?: number;
-    disablePan?: boolean;
-    limitPan?: boolean;
-    minScale?: number;
+    key ? : string;
+    doubleTap ? : boolean;
+    doubleTapScale ? : number;
+    zoomControlScale ? : number;
+    transitionDuration ? : number;
+    autoZoomOut ? : boolean;
+    limitZoom ? : number;
+    disablePan ? : boolean;
+    limitPan ? : boolean;
+    minScale ? : number;
+    eventHandler ? : any;
 }
 
 export const IvyPinchDefaultProperties = {
@@ -22,7 +23,7 @@ export const IvyPinchDefaultProperties = {
     minScale: 0
 }
 
-export class IvyPinch { 
+export class IvyPinch {
     properties: IvyPinchProperties;
     touches: any;
     element: any;
@@ -56,7 +57,7 @@ export class IvyPinch {
 
         this.touches = new Touches({
             element: properties.element
-        }); 
+        });
 
 
         /* Init */
@@ -74,24 +75,29 @@ export class IvyPinch {
         this.touches.on('mousemove', this.handlePan);
         this.touches.on('pinch', this.handlePinch);
 
-        if (this.properties.doubleTap){
+        if (this.properties.doubleTap) {
             this.touches.on('double-tap', this.handleDoubleTap);
         }
-
-
-        /* Touchmove */
-
-        //this.element.addEventListener("touchmove", this.handleTouchmove, false);
-    }   
+    }
 
 
     /* Custom events */
 
-    emitEvent(properties: any){
+    emitEvent(properties: any) {
+        /*
         this.events[properties.name] = new CustomEvent(properties.name, {
             'detail': properties.detail
         });
         this.element.dispatchEvent(this.events[properties.name]);
+        */
+
+        /* Emit angular event */
+        if (this.properties.eventHandler) {
+            this.properties.eventHandler.emit({
+                name: properties.name,
+                detail: properties.detail
+            });
+        }
     }
 
 
@@ -103,6 +109,10 @@ export class IvyPinch {
         if (this.eventType === undefined) {
             this.getTouchstartPosition(event);
         }
+
+        this.emitEvent({
+            name: 'touchstart'
+        });
     }
 
 
@@ -153,6 +163,10 @@ export class IvyPinch {
             this.updateInitialValues();
             this.eventType = undefined;
         }
+
+        this.emitEvent({
+            name: 'touchend'
+        });
     }
 
 
@@ -166,7 +180,10 @@ export class IvyPinch {
         }
 
         event.preventDefault();
-        const {clientX, clientY} = this.getClientPosition(event);
+        const {
+            clientX,
+            clientY
+        } = this.getClientPosition(event);
 
         if (!this.eventType) {
             this.startX = clientX - this.elementPosition.left;
@@ -180,19 +197,30 @@ export class IvyPinch {
         if (this.properties.limitPan) {
             this.limitPanY();
             this.limitPanX();
-        } 
+        }
 
         /* mousemove */
         if (event.type === "mousemove") {
             this.centeringImage();
         }
 
-        this.emitEvent({name: 'pan', detail: { moveX: this.moveX, moveY: this.moveY }});
+        this.emitEvent({
+            name: 'pan',
+            detail: {
+                moveX: this.moveX,
+                moveY: this.moveY
+            }
+        });
         this.transformElement(0);
     }
 
     handleDoubleTap = (event: any) => {
-        this.emitEvent({name: 'double-tap'});
+        this.emitEvent({
+            name: 'double-tap',
+            detail: {
+                scale: this.scale
+            }
+        });
         this.toggleZoom(event);
         return;
     }
@@ -221,16 +249,21 @@ export class IvyPinch {
             this.moveX = this.initialMoveX - (((this.distance / this.initialDistance) * this.moveXC) - this.moveXC);
             this.moveY = this.initialMoveY - (((this.distance / this.initialDistance) * this.moveYC) - this.moveYC);
 
-            if (this.properties.limitZoom || this.properties.minScale > 0){
+            if (this.properties.limitZoom || this.properties.minScale > 0) {
                 this.handleLimitZoom();
             }
 
             if (this.properties.limitPan) {
                 this.limitPanY();
                 this.limitPanX();
-            } 
+            }
 
-            this.emitEvent({name: 'pinch', detail: { scale: this.scale }});
+            this.emitEvent({
+                name: 'pinch',
+                detail: {
+                    scale: this.scale
+                }
+            });
             this.transformElement(0);
         }
     }
@@ -239,7 +272,7 @@ export class IvyPinch {
         const limitZoom = this.properties.limitZoom;
         const minScale = this.properties.minScale;
 
-        if (this.scale > limitZoom || this.scale <= minScale){
+        if (this.scale > limitZoom || this.scale <= minScale) {
             const imageWidth = this.getImageWidth();
             const imageHeight = this.getImageHeight();
             const enlargedImageWidth = imageWidth * this.scale;
@@ -249,11 +282,11 @@ export class IvyPinch {
 
             if (this.scale > limitZoom) {
                 this.scale = limitZoom;
-            } 
+            }
 
             if (this.scale <= minScale) {
                 this.scale = minScale;
-            } 
+            }
 
             const newImageWidth = imageWidth * this.scale;
             const newImageHeight = imageHeight * this.scale;
@@ -347,7 +380,7 @@ export class IvyPinch {
         this.element.style.justifyContent = 'center';
         this.element.style.transformOrigin = '0 0';
 
-        this.setImageWidth();
+        this.setImageSize();
     }
 
     removeBasicStyles() {
@@ -355,10 +388,10 @@ export class IvyPinch {
         this.element.style.alignItems = '';
         this.element.style.justifyContent = '';
         this.element.style.transformOrigin = '';
-        this.removeImageWidth();
+        this.removeImageSize();
     }
 
-    setImageWidth() {
+    setImageSize() {
         const imgElement = this.element.getElementsByTagName(this.elementTarget);
 
         if (imgElement.length) {
@@ -367,7 +400,7 @@ export class IvyPinch {
         }
     }
 
-    removeImageWidth() {
+    removeImageSize() {
         const imgElement = this.element.getElementsByTagName(this.elementTarget);
 
         if (imgElement.length) {
@@ -381,7 +414,10 @@ export class IvyPinch {
     }
 
     getTouchstartPosition(event: any) {
-        const {clientX, clientY} = this.getClientPosition(event);
+        const {
+            clientX,
+            clientY
+        } = this.getClientPosition(event);
 
         this.startX = clientX - this.elementPosition.left;
         this.startY = clientY - this.elementPosition.top;
@@ -400,7 +436,10 @@ export class IvyPinch {
             clientY = event.clientY;
         }
 
-        return {clientX, clientY};
+        return {
+            clientX,
+            clientY
+        };
     }
 
     resetScale() {
@@ -432,8 +471,8 @@ export class IvyPinch {
     }
 
     transformElement(duration: any) {
-        this.element.style.transition = "all "+duration+"ms";
-        this.element.style.transform = "matrix("+Number(this.scale)+", 0, 0, "+Number(this.scale)+", "+Number(this.moveX)+", "+Number(this.moveY)+")";
+        this.element.style.transition = "all " + duration + "ms";
+        this.element.style.transform = "matrix(" + Number(this.scale) + ", 0, 0, " + Number(this.scale) + ", " + Number(this.moveX) + ", " + Number(this.moveY) + ")";
     }
 
     isTouchScreen() {
@@ -449,7 +488,7 @@ export class IvyPinch {
         return this.getMatchMedia(query);
     }
 
-    getMatchMedia(query: any){
+    getMatchMedia(query: any) {
         return window.matchMedia(query).matches;
     }
 
@@ -477,7 +516,7 @@ export class IvyPinch {
     public toggleZoom(event: any = false) {
         if (this.initialScale === 1) {
             if (event && event.changedTouches) {
-                if (this.properties.doubleTapScale === undefined){
+                if (this.properties.doubleTapScale === undefined) {
                     return;
                 }
 
@@ -493,10 +532,20 @@ export class IvyPinch {
 
             this.centeringImage();
             this.updateInitialValues();
-            this.emitEvent({name: 'zoom-in'});
+            this.emitEvent({
+                name: 'zoom-in',
+                detail: {
+                    scale: this.scale
+                }
+            });
             this.transformElement(this.properties.transitionDuration);
         } else {
-            this.emitEvent({name: 'zoom-out'});
+            this.emitEvent({
+                name: 'zoom-out',
+                detail: {
+                    scale: this.scale
+                }
+            });
             this.resetScale();
         }
     }
@@ -510,7 +559,7 @@ export class IvyPinch {
         }
     }
 
-    destroy() {
+    public destroy() {
         this.removeBasicStyles();
         this.touches.destroy();
     }

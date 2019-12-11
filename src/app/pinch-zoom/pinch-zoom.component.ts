@@ -7,7 +7,7 @@ import {IvyPinch} from './ivypinch';
 
 
 @Component({
-	selector: 'pinch-zoom',
+	selector: 'pinch-zoom, [pinch-zoom]',
     exportAs: 'pinchZoom',
     templateUrl: './pinch-zoom.component.html',
     styleUrls: ['./pinch-zoom.component.sass']
@@ -41,7 +41,7 @@ export class PinchZoomComponent implements OnDestroy {
     @Input() limitPan: boolean;
     @Input() minScale: number = 0;
 
-    @Output() events: EventEmitter<any> = new EventEmitter<any>();
+    @Output() events: EventEmitter<any> = new EventEmitter();
 
     @HostBinding('style.overflow')
     get hostOverflow() {
@@ -85,7 +85,6 @@ export class PinchZoomComponent implements OnDestroy {
     }
 
     constructor(private elementRef: ElementRef) {
-        console.log("this.properties", this.properties);
         this.applyOptionsDefault(defaultProperties, {});
     }
 
@@ -109,9 +108,8 @@ export class PinchZoomComponent implements OnDestroy {
             return;
         }
 
-        console.log("this.properties", this.properties);
-
         this.properties['element'] = this.elementRef.nativeElement.querySelector('.pinch-zoom-content');
+        this.properties['eventHandler'] = this.events;
         this.pinchZoom = new IvyPinch(this.properties);
     }
 

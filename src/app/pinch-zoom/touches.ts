@@ -382,8 +382,6 @@ export class Touches {
 
 
     /* Public properties and methods */
-
-    // Получаем список событий и функцию-обработчик
     on(event: EventType, handler: Function) {
         if (event) {
             this.handlers[event] = handler;

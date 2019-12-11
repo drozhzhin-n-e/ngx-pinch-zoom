@@ -59,9 +59,9 @@ For use, put your image inside the &lt;pinch-zoom&gt; container. Please, pay att
 | touchend         | {name: "touchend"}        | One or more touch points are removed from the touch surface.|
 | pan              | {name: "pan", detail: {moveX: number, moveY: number}} | A user moves a zoomed image in any direction by a finger.|
 | pinch            | {name: "pinch", detail: {scale: number}} | A user zooms an image in or out by two fingers.|
-| double-tap       | {name: "double-tap"}      | Double touch, consisting of two quick taps.|
-| zoom-in          | {name: "zoom-in"}         | Zoom-in event is opened, when an image is zoomed in by the button (zoom icon with "+") or by toggleZoom method.|
-| zoom-out         | {name: "zoom-out"}        | Zoom-in event is opened, when an image is zoomed out by the button (zoom icon with "-") or by toggleZoom method.|
+| double-tap       | {name: "double-tap", detail: {scale: number}} | Double touch, consisting of two quick taps.|
+| zoom-in          | {name: "zoom-in", detail: {scale: number}} | Zoom-in event is opened, when an image is zoomed in by the button (zoom icon with "+") or by toggleZoom method.|
+| zoom-out         | {name: "zoom-out", detail: {scale: number}} | Zoom-in event is opened, when an image is zoomed out by the button (zoom icon with "-") or by toggleZoom method.|
 
 
 ## Sponsors

@@ -13,4 +13,5 @@ export interface Properties {
     "backgroundColor"?: string;
     "limitPan"?: boolean;
     "minScale"?: number;
+    eventHandler?: any;
 }

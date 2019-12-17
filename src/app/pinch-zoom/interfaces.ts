@@ -3,7 +3,7 @@ export interface Properties {
     "double-tap"?: boolean;
     "double-tap-scale"?: number;
     "auto-zoom-out"?: boolean;
-    "limit-zoom"?: number;
+    "limit-zoom"?: number | "original image size";
     "disabled"?: number;
     "element"?: string;
     "disablePan"?: boolean;
@@ -13,5 +13,7 @@ export interface Properties {
     "backgroundColor"?: string;
     "limitPan"?: boolean;
     "minScale"?: number;
-    eventHandler?: any;
+    "eventHandler"?: any;
+    "listeners"?: "auto" | "mouse and touch";
+    "wheel"?: boolean;
 }

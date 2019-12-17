@@ -32,7 +32,8 @@ export class Touches {
     mouseListeners: any = {
         "mousedown": "handleMousedown",
         "mousemove": "handleMousemove",
-        "mouseup": "handleMouseup"
+        "mouseup": "handleMouseup",
+        "wheel": "handleWheel"
     }
 
     constructor(properties: Properties) {
@@ -229,11 +230,6 @@ export class Touches {
 
     handleMouseup = (event: any) => {
 
-        // Double Tap
-        if (this.detectDoubleTap()) {
-            this.runHandler("double-tap", event);
-        }
-
         // Tap
         this.detectTap();
 
@@ -241,6 +237,13 @@ export class Touches {
         this.runHandler("mouseup", event);
         this.eventType = undefined;
         this.i = 0;
+    }
+
+
+    /* Wheel */
+
+    handleWheel = (event: any) => {
+        this.runHandler("wheel", event);
     }
 
 

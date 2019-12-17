@@ -34,7 +34,7 @@ For use, put your image inside the &lt;pinch-zoom&gt; container. Please, pay att
 | name             | type            | default | description                                 |
 |------------------|-----------------|---------|---------------------------------------------|
 | transition-duration | number       | 200     | Defines the speed of the animation of positioning and transforming.|
-| limit-zoom       | number          | 3       | Limit the maximum available scale. |
+| limit-zoom       | number, "original image size" | "original image size" | Limit the maximum available scale. By default, the maximum scale is calculated based on the original image size. |
 | minScale         | number          | 0       | Limit the minimum acceptable scale. With a value of 1, it is recommended to use this parameter with `limitPan` |
 | auto-zoom-out    | boolean         | false   | Automatic restoration of the original size of an image after its zooming in by two fingers.|
 | double-tap       | boolean         | true    | Zooming in and zooming out of an image, depending on its current condition, with double tap.|
@@ -45,6 +45,8 @@ For use, put your image inside the &lt;pinch-zoom&gt; container. Please, pay att
 | zoomControlScale | number          | 1       | Zoom factor when using zoom controls. |
 | backgroundColor  | string          | "rgba(0,0,0,0.85)" | The background color of the container. |
 | limitPan         | boolean         | false   | Stop panning when the edge of the image reaches the edge of the screen. |
+| listeners        | "auto", "mouse and touch" | "mouse and touch" | By default, subscriptions are made for mouse and touch screen events. The value `auto` means that the subscription will be only for touch events or only for mouse events, depending on the type of screen. |
+| wheel            | boolean         | true    | Scale with the mouse wheel. |
 
 ## Methods
 
@@ -53,17 +55,7 @@ For use, put your image inside the &lt;pinch-zoom&gt; container. Please, pay att
 | toggleZoom()            | Image zooming in and out, depending on its current state. |
 | destroy()               | Unsubscribe from mouse events and touches, as well as remove added styles from the DOM tree. |
 
-## Events
-
-| name             | type                      | description                                 |
-|------------------|---------------------------|---------------------------------------------|
-| touchstart       | {name: "touchstart"}      | One or more touch points are placed on the touch surface.|
-| touchend         | {name: "touchend"}        | One or more touch points are removed from the touch surface.|
-| pan              | {name: "pan", detail: {moveX: number, moveY: number}} | A user moves a zoomed image in any direction by a finger.|
-| pinch            | {name: "pinch", detail: {scale: number}} | A user zooms an image in or out by two fingers.|
-| double-tap       | {name: "double-tap", detail: {scale: number}} | Double touch, consisting of two quick taps.|
-| zoom-in          | {name: "zoom-in", detail: {scale: number}} | Zoom-in event is opened, when an image is zoomed in by the button (zoom icon with "+") or by toggleZoom method.|
-| zoom-out         | {name: "zoom-out", detail: {scale: number}} | Zoom-in event is opened, when an image is zoomed out by the button (zoom icon with "-") or by toggleZoom method.|
+See the full documentation and examples on the [home page](http://ivylab.space/pinch-zoom).
 
 
 ## Sponsors

@@ -2,14 +2,16 @@ export const defaultProperties = {
     transitionDuration: 200,
     doubleTap: true,
     doubleTapScale: 2,
-    limitZoom: 3,
+    limitZoom: "original image size",
     autoZoomOut: false,
     disabled: false,
     overflow: "hidden",
     zoomControlScale: 1,
     backgroundColor: "rgba(0,0,0,0.85)",
     minScale: 0,
-    disableZoomControl: "auto"
+    disableZoomControl: "auto",
+    listeners: "mouse and touch",
+    wheel: true
 }
 
 export const backwardCompatibilityProperties = {

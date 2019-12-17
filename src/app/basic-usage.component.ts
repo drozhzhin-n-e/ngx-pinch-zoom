@@ -5,7 +5,5 @@ import { Component } from '@angular/core';
   templateUrl: './basic-usage.component.html'
 })
 export class BasicUsageComponent {
-	handlePinchZoomEvents(event){
-		console.log(event);
-	}
+
 }

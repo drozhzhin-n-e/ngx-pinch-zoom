@@ -1,10 +1,9 @@
-import {ChangeDetectorRef, Component, ElementRef, EventEmitter, HostBinding, HostListener, Input, Output, OnDestroy, SimpleChanges} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, SimpleChanges} from '@angular/core';
 
 import {Properties} from './interfaces';
 import {defaultProperties, backwardCompatibilityProperties} from './properties';
 import {Touches} from './touches';
 import {IvyPinch} from './ivypinch';
-
 
 @Component({
 	selector: 'pinch-zoom, [pinch-zoom]',
@@ -31,7 +30,7 @@ export class PinchZoomComponent implements OnDestroy {
     @Input('double-tap') doubleTap = true;
     @Input('double-tap-scale') doubleTapScale = 2;
     @Input('auto-zoom-out') autoZoomOut = false;
-    @Input('limit-zoom') limitZoom: number;
+    @Input('limit-zoom') limitZoom: number | "original image size";
     @Input('disabled') disabled: boolean = false;
     @Input() disablePan: boolean;
     @Input() overflow: "hidden" | "visible";
@@ -40,8 +39,8 @@ export class PinchZoomComponent implements OnDestroy {
     @Input() backgroundColor: string = "rgba(0,0,0,0.85)";
     @Input() limitPan: boolean;
     @Input() minScale: number = 0;
-
-    @Output() events: EventEmitter<any> = new EventEmitter();
+    @Input() listeners: 'auto' | 'mouse and touch' = 'mouse and touch';
+    @Input() wheel: boolean = true;
 
     @HostBinding('style.overflow')
     get hostOverflow() {
@@ -90,6 +89,9 @@ export class PinchZoomComponent implements OnDestroy {
 
     ngOnInit(){
         this.initPinchZoom();
+        
+        /* Calls the method until the image size is available */
+        this.pollLimitZoom();
     }
 
     ngOnChanges(changes) {
@@ -109,7 +111,6 @@ export class PinchZoomComponent implements OnDestroy {
         }
 
         this.properties['element'] = this.elementRef.nativeElement.querySelector('.pinch-zoom-content');
-        this.properties['eventHandler'] = this.events;
         this.pinchZoom = new IvyPinch(this.properties);
     }
 
@@ -162,7 +163,11 @@ export class PinchZoomComponent implements OnDestroy {
         return true;
     }
 
-    public destroy() {
+    pollLimitZoom() {
+        this.pinchZoom.pollLimitZoom();
+    }
+
+    destroy() {
         this.pinchZoom.destroy();
     }
 }

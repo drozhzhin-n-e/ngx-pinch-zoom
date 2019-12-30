@@ -16,4 +16,7 @@ export interface Properties {
     "eventHandler"?: any;
     "listeners"?: "auto" | "mouse and touch";
     "wheel"?: boolean;
+    "autoHeight"?: boolean;
+    "wheelZoomFactor"?: number;
+    "draggableImage"?: boolean;
 }

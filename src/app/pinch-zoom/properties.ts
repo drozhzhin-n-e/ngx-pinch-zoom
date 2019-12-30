@@ -11,7 +11,9 @@ export const defaultProperties = {
     minScale: 0,
     disableZoomControl: "auto",
     listeners: "mouse and touch",
-    wheel: true
+    wheel: true,
+    wheelZoomFactor: 0.2,
+    draggableImage: false
 }
 
 export const backwardCompatibilityProperties = {

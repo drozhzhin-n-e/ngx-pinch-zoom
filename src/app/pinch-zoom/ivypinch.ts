@@ -15,6 +15,9 @@ export interface IvyPinchProperties {
     eventHandler ? : any;
     listeners ? : "auto" | "mouse and touch";
     wheel ? : boolean;
+    autoHeight ? : boolean;
+    wheelZoomFactor ? : number;
+    draggableImage ? : boolean;
 }
 
 export const IvyPinchDefaultProperties = {
@@ -22,7 +25,9 @@ export const IvyPinchDefaultProperties = {
     doubleTapScale: 2,
     transitionDuration: 200,
     limitZoom: "original image size",
-    minScale: 0
+    minScale: 0,
+    wheelZoomFactor: 0.2,
+    draggableImage: true
 }
 
 export class IvyPinch {
@@ -51,7 +56,6 @@ export class IvyPinch {
     initialDistance: number = 0;
     events: any = {};
     maxHtmlContentScale: number = 3;
-    wheelZoomFactor: number = 0.1;
     maxScale: number = 1;
 
     constructor(properties: any) {
@@ -62,7 +66,8 @@ export class IvyPinch {
 
         this.touches = new Touches({
             element: properties.element,
-            listeners: properties.listeners
+            listeners: properties.listeners,
+            resize: properties.autoHeight
         });
 
 
@@ -87,6 +92,10 @@ export class IvyPinch {
 
         if (this.properties.doubleTap) {
             this.touches.on('double-tap', this.handleDoubleTap);
+        }
+
+        if (this.properties.autoHeight) {
+            this.touches.on('resize', this.handleResize);
         }
     }
 
@@ -233,15 +242,13 @@ export class IvyPinch {
     handleWheel = (event: any) => {
         event.preventDefault();
 
-        let zoomFactor = event.deltaY < 0 ? (1 + this.wheelZoomFactor) : (1 - this.wheelZoomFactor);
-        let newScale = this.initialScale * zoomFactor;
+        let zoomFactor = event.deltaY < 0 ? (this.properties.wheelZoomFactor) : (- this.properties.wheelZoomFactor);
+        let newScale = this.initialScale + zoomFactor;
 
         /* Round value */
-        if (newScale < (1 + this.wheelZoomFactor)) {
+        if (newScale < (1 + this.properties.wheelZoomFactor)) {
             newScale = 1;
-        } else if (newScale < this.maxScale && newScale > this.maxScale - this.wheelZoomFactor) {
-            newScale = this.maxScale;
-        } else if (newScale > this.maxScale) {
+        } else if (newScale < this.maxScale && newScale > this.maxScale - this.properties.wheelZoomFactor) {
             newScale = this.maxScale;
         }
 
@@ -264,6 +271,10 @@ export class IvyPinch {
             scale: newScale,
             center: [xCenter, yCenter]
         });
+    }
+
+    handleResize = (event: any) => {
+        this.setAutoHeight();
     }
 
     handleLimitZoom() {
@@ -396,8 +407,8 @@ export class IvyPinch {
         this.element.style.alignItems = 'center';
         this.element.style.justifyContent = 'center';
         this.element.style.transformOrigin = '0 0';
-
         this.setImageSize();
+        this.setDraggableImage();
     }
 
     removeBasicStyles() {
@@ -406,6 +417,23 @@ export class IvyPinch {
         this.element.style.justifyContent = '';
         this.element.style.transformOrigin = '';
         this.removeImageSize();
+        this.removeDraggableImage();
+    }
+
+    setDraggableImage() {
+        const imgElement = this.getImageElement();
+
+        if (imgElement) {
+            imgElement.draggable = this.properties.draggableImage;
+        }
+    }
+
+    removeDraggableImage() {
+        const imgElement = this.getImageElement();
+
+        if (imgElement) {
+            imgElement.draggable = !this.properties.draggableImage;
+        }
     }
 
     setImageSize() {
@@ -414,7 +442,24 @@ export class IvyPinch {
         if (imgElement.length) {
             imgElement[0].style.maxWidth = '100%';
             imgElement[0].style.maxHeight = '100%';
+
+            this.setAutoHeight();
         }
+    }
+
+    setAutoHeight() {
+        const imgElement = this.element.getElementsByTagName(this.elementTarget);
+
+        if (!this.properties.autoHeight || !imgElement.length) {
+            return;
+        }
+
+        const imgNaturalWidth = imgElement[0].getAttribute("width");
+        const imgNaturalHeight = imgElement[0].getAttribute("height");
+        const sizeRatio = imgNaturalWidth / imgNaturalHeight;
+        const parentWidth = this.parentElement.offsetWidth;
+
+        imgElement[0].style.maxHeight = parentWidth / sizeRatio + "px";
     }
 
     removeImageSize() {
@@ -533,6 +578,14 @@ export class IvyPinch {
                 clearInterval(poll);
             }
         }, 10);
+    }
+
+    getImageElement() {
+        const imgElement = this.element.getElementsByTagName(this.elementTarget);
+
+        if (imgElement.length) {
+            return imgElement[0];
+        }
     }
 
     toggleZoom(event: any = false) {

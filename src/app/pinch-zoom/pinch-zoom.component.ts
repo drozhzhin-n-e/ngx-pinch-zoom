@@ -41,6 +41,9 @@ export class PinchZoomComponent implements OnDestroy {
     @Input() minScale: number = 0;
     @Input() listeners: 'auto' | 'mouse and touch' = 'mouse and touch';
     @Input() wheel: boolean = true;
+    @Input() autoHeight: boolean = false;
+    @Input() wheelZoomFactor: number = 0.2;
+    @Input() draggableImage: boolean = false;
 
     @HostBinding('style.overflow')
     get hostOverflow() {

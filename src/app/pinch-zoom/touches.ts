@@ -1,7 +1,7 @@
-
 export interface Properties {
     element: HTMLElement;
     listeners?: 'auto' | 'mouse and touch';
+    resize?: boolean;
 }
 
 export type EventType = undefined | 'touchend' | 'pan' | 'pinch' | 'horizontal-swipe' | 'vertical-swipe' | 'tap' | 'longtap';
@@ -35,6 +35,9 @@ export class Touches {
         "mouseup": "handleMouseup",
         "wheel": "handleWheel"
     }
+    otherListeners: any = {
+        "resize": "handleResize"
+    }
 
     constructor(properties: Properties) {
         this.properties = properties;
@@ -57,15 +60,30 @@ export class Touches {
             listeners = this.detectTouchScreen() ? this.touchListeners : this.mouseListeners;
         }
 
+        if (this.properties.resize) {
+            listeners = Object.assign(listeners, this.otherListeners);
+        }
+
         for (var listener in listeners) {
             const handler: MouseHandler = listeners[listener];
-            if (listener === 'mouseup' || listener === "mousemove") {
+
+            // Window
+            if (listener === "resize") {
+                if (action === 'addEventListener') {
+                    window.addEventListener(listener, this[handler], false);
+                }
+                if (action === 'removeEventListener') {
+                    window.removeEventListener(listener, this[handler], false);
+                }
+            // Document
+            } else if (listener === 'mouseup' || listener === "mousemove") {
                 if (action === 'addEventListener') {
                     document.addEventListener(listener, this[handler], false);
                 }
                 if (action === 'removeEventListener') {
                     document.removeEventListener(listener, this[handler], false);
                 }
+            // Element
             } else {
                 if (action === 'addEventListener') {
                     this.element.addEventListener(listener, this[handler], false);
@@ -104,30 +122,6 @@ export class Touches {
         if (this.detectPan(touches)) {
             this.runHandler("pan", event);
         }
-
-        // Linear swipe
-        /*
-        switch (this.detectLinearSwipe(event)) {
-            case "horizontal-swipe":
-                event.swipeType = "horizontal-swipe";
-                this.runHandler("horizontal-swipe", event);
-                break;
-            case "vertical-swipe":
-                event.swipeType = "vertical-swipe";
-                this.runHandler("vertical-swipe", event);
-                break;
-        }
-        */
-
-        // Linear swipe
-        /*
-        if (this.detectLinearSwipe(event) ||
-            this.eventType === 'horizontal-swipe' ||
-            this.eventType === 'vertical-swipe') {
-
-            this.handleLinearSwipe(event);
-        }
-        */
 
         // Pinch
         if (this.detectPinch(event)) {
@@ -246,6 +240,11 @@ export class Touches {
         this.runHandler("wheel", event);
     }
 
+    /* Resize */
+
+    handleResize = (event: any) => {
+        this.runHandler("resize", event);
+    }
 
     runHandler(eventName: any, response: any) {
         if (this.handlers[eventName]) {

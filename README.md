@@ -47,6 +47,9 @@ For use, put your image inside the &lt;pinch-zoom&gt; container. Please, pay att
 | limitPan         | boolean         | false   | Stop panning when the edge of the image reaches the edge of the screen. |
 | listeners        | "auto", "mouse and touch" | "mouse and touch" | By default, subscriptions are made for mouse and touch screen events. The value `auto` means that the subscription will be only for touch events or only for mouse events, depending on the type of screen. |
 | wheel            | boolean         | true    | Scale with the mouse wheel. |
+| wheelZoomFactor  | number          | 0.2     | Zoom factor when zoomed in with the mouse wheel. |
+| autoHeight       | boolean         | false   | Calculate the height of the container based on the `width` and `height` attributes of the image. By default, the width of the container is 100%, and the height is determined after the image information is loaded - this may cause a delay in determining the height of the container. If you want the container to initially have dimensions corresponding to the dimensions of the image, then specify the attributes `width` and `height` for the `<img>` tag. When setting the property value to `true`, a subscription to the window resize listener will be created. |
+| draggableImage   | boolean         | true    | Sets the attribute `draggable` to the `<img>` tag. |
 
 ## Methods
 
@@ -57,6 +60,9 @@ For use, put your image inside the &lt;pinch-zoom&gt; container. Please, pay att
 
 See the full documentation and examples on the [home page](http://ivylab.space/pinch-zoom).
 
+## Browser support
+
+Pinch Zoom supports the most recent two versions of all major browsers: Chrome (including Android 4.4-10), Firefox, Safari (including iOS 9-13), and Edge.
 
 ## Sponsors
 

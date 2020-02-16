@@ -26,8 +26,11 @@ export const IvyPinchDefaultProperties = {
     transitionDuration: 200,
     limitZoom: "original image size",
     minScale: 0,
+    wheel: true,
     wheelZoomFactor: 0.2,
-    draggableImage: true
+    draggableImage: true,
+    listeners: 'auto',
+    zoomControlScale: 2
 }
 
 export class IvyPinch {
@@ -56,18 +59,19 @@ export class IvyPinch {
     initialDistance: number = 0;
     events: any = {};
     maxHtmlContentScale: number = 3;
-    maxScale: number = 1;
+    maxScale: number = 3;
 
     constructor(properties: any) {
         this.element = properties.element;
         this.elementTarget = this.element.querySelector('*').tagName;
         this.parentElement = this.element.parentElement;
         this.properties = Object.assign({}, IvyPinchDefaultProperties, properties);
+        this.pollLimitZoom();
 
         this.touches = new Touches({
             element: properties.element,
-            listeners: properties.listeners,
-            resize: properties.autoHeight
+            listeners: this.properties.listeners,
+            resize: this.properties.autoHeight
         });
 
 
@@ -242,13 +246,14 @@ export class IvyPinch {
     handleWheel = (event: any) => {
         event.preventDefault();
 
-        let zoomFactor = event.deltaY < 0 ? (this.properties.wheelZoomFactor) : (- this.properties.wheelZoomFactor);
+        let wheelZoomFactor = this.properties.wheelZoomFactor || 0;
+        let zoomFactor = event.deltaY < 0 ? (wheelZoomFactor) : (- wheelZoomFactor);
         let newScale = this.initialScale + zoomFactor;
 
         /* Round value */
-        if (newScale < (1 + this.properties.wheelZoomFactor)) {
+        if (newScale < (1 + wheelZoomFactor)) {
             newScale = 1;
-        } else if (newScale < this.maxScale && newScale > this.maxScale - this.properties.wheelZoomFactor) {
+        } else if (newScale < this.maxScale && newScale > this.maxScale - wheelZoomFactor) {
             newScale = this.maxScale;
         }
 
@@ -273,13 +278,13 @@ export class IvyPinch {
         });
     }
 
-    handleResize = (event: any) => {
+    handleResize = (_event: any) => {
         this.setAutoHeight();
     }
 
     handleLimitZoom() {
         const limitZoom = this.maxScale;
-        const minScale = this.properties.minScale;
+        const minScale = this.properties.minScale || 0;
 
         if (this.scale > limitZoom || this.scale <= minScale) {
             const imageWidth = this.getImageWidth();
@@ -319,7 +324,7 @@ export class IvyPinch {
                 return this.maxScale;
             }
         } else {
-            this.maxScale = this.properties.limitZoom;
+            this.maxScale = this.properties.limitZoom || 0;
             return this.maxScale;
         }
     }
@@ -432,7 +437,7 @@ export class IvyPinch {
         const imgElement = this.getImageElement();
 
         if (imgElement) {
-            imgElement.draggable = !this.properties.draggableImage;
+            imgElement.draggable = true;
         }
     }
 
@@ -600,7 +605,8 @@ export class IvyPinch {
                 this.moveX = this.initialMoveX - (changedTouches[0].clientX - this.elementPosition.left) * (this.properties.doubleTapScale - 1);
                 this.moveY = this.initialMoveY - (changedTouches[0].clientY - this.elementPosition.top) * (this.properties.doubleTapScale - 1);
             } else {
-                this.scale = this.initialScale * (this.properties.zoomControlScale + 1);
+                let zoomControlScale = this.properties.zoomControlScale || 0;
+                this.scale = this.initialScale * (zoomControlScale + 1);
                 this.moveX = this.initialMoveX - this.element.offsetWidth * (this.scale - 1) / 2;
                 this.moveY = this.initialMoveY - this.element.offsetHeight * (this.scale - 1) / 2;
             }

@@ -11,6 +11,7 @@ export interface IvyPinchProperties {
     limitZoom ? : number | "original image size";
     disablePan ? : boolean;
     limitPan ? : boolean;
+    minPanScale ? : number;
     minScale ? : number;
     eventHandler ? : any;
     listeners ? : "auto" | "mouse and touch";
@@ -26,6 +27,7 @@ export const IvyPinchDefaultProperties = {
     transitionDuration: 200,
     limitZoom: "original image size",
     minScale: 0,
+    minPanScale: 1.0001,
     wheel: true,
     wheelZoomFactor: 0.2,
     draggableImage: true,
@@ -136,7 +138,9 @@ export class IvyPinch {
             }
 
             // Align image
-            if (this.eventType === 'pinch' || this.eventType === 'pan') {
+            if (this.eventType === 'pinch' || 
+                this.eventType === 'pan' && this.scale > this.properties.minPanScale) {
+
                 this.alignImage();
             }
 
@@ -170,7 +174,7 @@ export class IvyPinch {
      */
 
     handlePan = (event: any) => {
-        if (this.scale <= 1 || this.properties.disablePan) {
+        if (this.scale < this.properties.minPanScale || this.properties.disablePan) {
             return;
         }
 
@@ -195,7 +199,7 @@ export class IvyPinch {
         }
 
         /* mousemove */
-        if (event.type === "mousemove") {
+        if (event.type === "mousemove" && this.scale > this.properties.minPanScale) {
             this.centeringImage();
         }
 

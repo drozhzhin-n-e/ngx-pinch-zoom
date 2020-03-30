@@ -38,6 +38,7 @@ export class PinchZoomComponent implements OnDestroy {
     @Input() disableZoomControl: "disable" | "never" | "auto";
     @Input() backgroundColor: string = "rgba(0,0,0,0.85)";
     @Input() limitPan: boolean;
+    @Input() minPanScale: number = 1.0001;
     @Input() minScale: number = 0;
     @Input() listeners: 'auto' | 'mouse and touch' = 'mouse and touch';
     @Input() wheel: boolean = true;

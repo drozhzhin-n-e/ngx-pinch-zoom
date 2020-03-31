@@ -45,6 +45,7 @@ For use, put your image inside the &lt;pinch-zoom&gt; container. Please, pay att
 | zoomControlScale | number          | 1       | Zoom factor when using zoom controls. |
 | backgroundColor  | string          | "rgba(0,0,0,0.85)" | The background color of the container. |
 | limitPan         | boolean         | false   | Stop panning when the edge of the image reaches the edge of the screen. |
+| minPanScale      | number          | 1.0001  | Minimum zoom at which panning is enabled. |
 | listeners        | "auto", "mouse and touch" | "mouse and touch" | By default, subscriptions are made for mouse and touch screen events. The value `auto` means that the subscription will be only for touch events or only for mouse events, depending on the type of screen. |
 | wheel            | boolean         | true    | Scale with the mouse wheel. |
 | wheelZoomFactor  | number          | 0.2     | Zoom factor when zoomed in with the mouse wheel. |

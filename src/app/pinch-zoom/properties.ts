@@ -9,6 +9,7 @@ export const defaultProperties = {
     zoomControlScale: 1,
     backgroundColor: "rgba(0,0,0,0.85)",
     minScale: 0,
+    minPanScale: 1.0001,
     disableZoomControl: "auto",
     listeners: "mouse and touch",
     wheel: true,

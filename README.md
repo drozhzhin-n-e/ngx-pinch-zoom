@@ -11,23 +11,27 @@ Live demos and source code samples can be found on [home page](http://ivylab.spa
 ## Installation
 
 Install the npm package.
-
-	npm i ngx-pinch-zoom
+```
+npm i ngx-pinch-zoom
+```
 
 Import module:
+```ts
+import { PinchZoomModule } from 'ngx-pinch-zoom';
 
-	import { PinchZoomModule } from 'ngx-pinch-zoom';
-
-	@NgModule({
-	    imports: [ PinchZoomModule ]
-	})
+@NgModule({
+    imports: [ PinchZoomModule ]
+})
+```
 
 ## Usage
 For use, put your image inside the &lt;pinch-zoom&gt; container. Please, pay attention to the parameters of your viewport metatag. If you use Pinch Zoom, it is required to limit zooming of a web-page, by entering the following parameters: &lt;meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"&gt;.
 
-	<pinch-zoom>
-	    <img src="path_to_image" /> 
-	</pinch-zoom>
+```html
+<pinch-zoom>
+    <img src="path_to_image" /> 
+</pinch-zoom>
+```
 
 ## Properties
 

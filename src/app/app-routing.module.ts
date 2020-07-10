@@ -1,18 +1,17 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { AppComponent } from './app.component';
 import { BasicUsageComponent } from './basic-usage.component';
 
 
 const routes: Routes = [
-	{ 
-        path: '', 
+	{
+        path: '',
         component: BasicUsageComponent
     },
-    { 
-        path: 'demo', 
-        loadChildren: './demo/demo.module#DemoModule'
+    {
+        path: 'demo',
+        loadChildren: () => import('./demo/demo.module').then(m => m.DemoModule)
     },
 ];
 

@@ -291,9 +291,9 @@ export class Touches {
 
         if (tapLength > 0) {
             if (tapLength < this.tapMinTimeout) {
-                this.runHandler("tap", event);
+                this.runHandler("tap", {});
             } else {
-                this.runHandler("longtap", event);
+                this.runHandler("longtap", {});
             }
         }
     }

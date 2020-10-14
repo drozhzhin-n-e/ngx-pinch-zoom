@@ -4,9 +4,9 @@
 /dist
 /tmp
 /out-tsc
-/projects
 # Only exists if Bazel was run
 /bazel-out
+/projects
 
 # dependencies
 /node_modules

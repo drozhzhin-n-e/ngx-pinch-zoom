@@ -10,7 +10,7 @@ describe('workspace-project App', () => {
 
   it('should display welcome message', () => {
     page.navigateTo();
-    expect(page.getTitleText()).toEqual('pinchZoomApp app is running!');
+    expect(page.getTitleText()).toEqual('ivypinch-ng10-prod app is running!');
   });
 
   afterEach(async () => {

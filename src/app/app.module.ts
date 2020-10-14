@@ -3,14 +3,11 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BasicUsageComponent } from './basic-usage.component';
 import { PinchZoomModule } from './pinch-zoom/pinch-zoom.module';
-//import { PinchZoomModule } from 'ngx-pinch-zoom';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    BasicUsageComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,

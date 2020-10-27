@@ -72,7 +72,9 @@ export class PinchZoomComponent implements OnDestroy {
     }
 
     get isDragging() {
-        return this.pinchZoom.isDragging();
+        if (this.pinchZoom) {
+            return this.pinchZoom.isDragging();
+        }
     }
 
     get isDisabled() {
@@ -93,9 +95,6 @@ export class PinchZoomComponent implements OnDestroy {
 
     ngOnInit(){
         this.initPinchZoom();
-        
-        /* Calls the method until the image size is available */
-        this.pollLimitZoom();
     }
 
     ngOnChanges(changes) {
@@ -116,6 +115,9 @@ export class PinchZoomComponent implements OnDestroy {
 
         this.properties['element'] = this.elementRef.nativeElement.querySelector('.pinch-zoom-content');
         this.pinchZoom = new IvyPinch(this.properties);
+
+        /* Calls the method until the image size is available */
+        this.pollLimitZoom();
     }
 
     getProperties(changes){

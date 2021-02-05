@@ -1,9 +1,12 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": false
+  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ivypinch-ng10-prod": {
+    "ivypinchApp": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,7 +20,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/ivypinch-ng10-prod",
+            "outputPath": "dist/ivypinchApp",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -43,7 +46,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
               "vendorChunk": false,
@@ -66,18 +68,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "ivypinch-ng10-prod:build"
+            "browserTarget": "ivypinchApp:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "ivypinch-ng10-prod:build:production"
+              "browserTarget": "ivypinchApp:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "ivypinch-ng10-prod:build"
+            "browserTarget": "ivypinchApp:build"
           }
         },
         "test": {
@@ -114,19 +116,56 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "ivypinch-ng10-prod:serve"
+            "devServerTarget": "ivypinchApp:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "ivypinch-ng10-prod:serve:production"
+              "devServerTarget": "ivypinchApp:serve:production"
             }
+          }
+        }
+      }
+    },
+    "ngx-pinch-zoom": {
+      "projectType": "library",
+      "root": "projects/ngx-pinch-zoom",
+      "sourceRoot": "projects/ngx-pinch-zoom/src",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:ng-packagr",
+          "options": {
+            "tsConfig": "projects/ngx-pinch-zoom/tsconfig.lib.json",
+            "project": "projects/ngx-pinch-zoom/ng-package.json"
+          },
+          "configurations": {
+            "production": {
+              "tsConfig": "projects/ngx-pinch-zoom/tsconfig.lib.prod.json"
+            }
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/ngx-pinch-zoom/src/test.ts",
+            "tsConfig": "projects/ngx-pinch-zoom/tsconfig.spec.json",
+            "karmaConfig": "projects/ngx-pinch-zoom/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/ngx-pinch-zoom/tsconfig.lib.json",
+              "projects/ngx-pinch-zoom/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
     }
   },
-  "defaultProject": "ivypinch-ng10-prod",
-  "cli": {
-    "analytics": false
-  }
+  "defaultProject": "ivypinchApp"
 }

@@ -73,4 +73,4 @@ Pinch Zoom supports the most recent two versions of all major browsers: Chrome (
 
 Tested using Browserstack
 
-[![Browserstack](http://crystalui.org/assets/img/browserstack-logo.png)](http://browserstack.com/)
+[![Browserstack](http://ivylab.space/assets/img/browserstack-logo.png)](http://browserstack.com/)

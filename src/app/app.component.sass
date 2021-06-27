@@ -1,0 +1,136 @@
+.wrapper
+  max-width: 500px
+  margin: 0 auto
+  font-family: system-ui
+
+.demo
+  margin-bottom: 60px
+
+.actions
+  padding-top: 20px
+
+h1 
+  font-size: 30px
+h2 
+  font-size: 20px
+
+/* Colors */
+
+$black: #00000a
+$white: #fff
+$dark-white: rgba(0, 0, 0, 0.75)
+$blue: #0366d6
+$dark-blue: #035cbf
+$green: #7cae7a
+$dark-green: #709a6e
+$gray: rgba(0, 0, 0, 0.5)
+$light-shadow: rgba(0, 0, 0, 0.15)
+
+/* Buttons */
+
+.btn
+  display: inline-block 
+  min-width: 190px
+  line-height: 56px
+  font-weight: 500
+  border-radius: 6px
+  text-align: center
+  margin: 0 15px 15px 0
+  background: none
+  transition: all 200ms
+  color: $black
+  outline: none
+  font-size: 15px
+  letter-spacing: 1px
+  text-transform: uppercase
+  font-weight: 600
+  background: $white
+.btn:hover 
+  color: $dark-white
+  text-decoration: none
+  cursor: pointer 
+  box-shadow: 0px 3px 10px $light-shadow
+.btn:active
+  position: relative
+  top: 2px
+
+.btn-small
+  line-height: 32px
+  font-weight: normal
+  padding: 0 8px
+  font-size: 14px
+  letter-spacing: 0px
+  min-width: auto
+  text-transform: none
+
+.btn-outline
+  border: 1px solid #999
+.btn-outline:hover 
+  border-color: $dark-white
+.btn-rounded
+  border-radius: 100px
+.btn[disabled]
+  cursor: default 
+  box-shadow: none
+
+.btn-light 
+  color: $white
+.btn-light:hover 
+  color: rgba(255, 255, 255, 0.75)
+.btn-light.btn-outline
+  border: 1px solid $white
+.btn-light.btn-outline:hover 
+  border-color: rgba(255, 255, 255, 0.75)
+
+.btn-green
+  background: $green
+  color: $white
+  border: none 
+.btn-green.btn-outline
+  border: 1px solid $green
+  color: $green
+  background: none
+.btn-green.btn-clear
+  color: $green
+.btn-green:hover
+  background: $dark-green
+  color: $white
+.btn-green.btn-outline:hover 
+  background: none 
+  border-color: $dark-green
+  color: $dark-green
+.btn-green.btn-clear:hover 
+  color: $dark-green
+.btn-green[disabled]
+  background: #aaa
+.btn-green.btn-outline[disabled]
+  background: none
+  border-color: #aaa
+  color: #aaa
+
+.btn-blue
+  background: $blue
+  color: $white
+  border: none 
+.btn-blue.btn-outline
+  border: 1px solid $blue
+  color: $blue
+  background: none 
+.btn-blue.btn-clear
+  color: $blue
+  background: none
+.btn-blue:hover
+  background: $dark-blue
+  color: $white
+.btn-blue.btn-outline:hover 
+  background: none 
+  border-color: $dark-blue
+  color: $dark-blue
+.btn-blue.btn-clear:hover 
+  color: $dark-blue
+
+.btn-clear
+  background: none
+  border: none
+.btn-clear:hover
+  background: none

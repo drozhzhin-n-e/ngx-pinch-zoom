@@ -54,7 +54,7 @@ For use, put your image inside the &lt;pinch-zoom&gt; container. Please, pay att
 | wheel            | boolean         | true    | Scale with the mouse wheel. |
 | wheelZoomFactor  | number          | 0.2     | Zoom factor when zoomed in with the mouse wheel. |
 | autoHeight       | boolean         | false   | Calculate the height of the container based on the `width` and `height` attributes of the image. By default, the width of the container is 100%, and the height is determined after the image information is loaded - this may cause a delay in determining the height of the container. If you want the container to initially have dimensions corresponding to the dimensions of the image, then specify the attributes `width` and `height` for the `<img>` tag. When setting the property value to `true`, a subscription to the window resize listener will be created. |
-| draggableImage   | boolean         | true    | Sets the attribute `draggable` to the `<img>` tag. |
+| draggableImage   | boolean         | false   | Sets the attribute `draggable` to the `<img>` tag. |
 
 ## Methods
 

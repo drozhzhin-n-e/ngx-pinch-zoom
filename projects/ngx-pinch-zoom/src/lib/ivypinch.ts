@@ -1,42 +1,11 @@
 import {Touches} from './touches';
+import {Properties} from './interfaces';
+import {defaultProperties} from './properties';
 
-export interface IvyPinchProperties {
-    element: string;
-    key ? : string;
-    doubleTap ? : boolean;
-    doubleTapScale ? : number;
-    zoomControlScale ? : number;
-    transitionDuration ? : number;
-    autoZoomOut ? : boolean;
-    limitZoom ? : number | "original image size";
-    disablePan ? : boolean;
-    limitPan ? : boolean;
-    minPanScale ? : number;
-    minScale ? : number;
-    eventHandler ? : any;
-    listeners ? : "auto" | "mouse and touch";
-    wheel ? : boolean;
-    autoHeight ? : boolean;
-    wheelZoomFactor ? : number;
-    draggableImage ? : boolean;
-}
-
-export const IvyPinchDefaultProperties = {
-    doubleTap: true,
-    doubleTapScale: 2,
-    transitionDuration: 200,
-    limitZoom: "original image size",
-    minScale: 0,
-    minPanScale: 1.0001,
-    wheel: true,
-    wheelZoomFactor: 0.2,
-    draggableImage: true,
-    listeners: 'auto',
-    zoomControlScale: 2
-}
+type PropertyName = keyof Properties;
 
 export class IvyPinch {
-    properties: IvyPinchProperties;
+    properties: Properties = defaultProperties;
     touches: any;
     element: any;
     elementTarget: any;
@@ -60,20 +29,39 @@ export class IvyPinch {
     doubleTapTimeout: number = 0;
     initialDistance: number = 0;
     events: any = {};
-    maxHtmlContentScale: number = 3;
-    maxScale: number = 3;
+    maxScale!: number;
+    defaultMaxScale: number = 3;
+
+    // Minimum scale at which panning works
+    get minPanScale() {
+        return this.getPropertiesValue("minPanScale");
+    }
+
+    get fullImage() {
+        return this.properties.fullImage;
+    }
 
     constructor(properties: any) {
         this.element = properties.element;
+
+        if (!this.element) {
+            return;
+        }
+
         this.elementTarget = this.element.querySelector('*').tagName;
         this.parentElement = this.element.parentElement;
-        this.properties = Object.assign({}, IvyPinchDefaultProperties, properties);
-        this.pollLimitZoom();
+        this.properties = Object.assign({}, defaultProperties, properties);
+        this.detectLimitZoom();
 
         this.touches = new Touches({
             element: properties.element,
-            listeners: this.properties.listeners,
-            resize: this.properties.autoHeight
+            listeners: properties.listeners,
+            resize: properties.autoHeight,
+            mouseListeners: {
+                "mousedown": "handleMousedown",
+                "mouseup": "handleMouseup",
+                "wheel": "handleWheel"
+            }
         });
 
 
@@ -109,6 +97,7 @@ export class IvyPinch {
     /* Touchstart */
 
     handleTouchstart = (event: any) => {
+        this.touches.addEventListeners("mousemove", "handleMousemove");
         this.getElementPosition();
 
         if (this.eventType === undefined) {
@@ -139,7 +128,7 @@ export class IvyPinch {
 
             // Align image
             if (this.eventType === 'pinch' || 
-                this.eventType === 'pan' && this.scale > this.properties.minPanScale) {
+                this.eventType === 'pan' && this.scale > this.minPanScale) {
 
                 this.alignImage();
             }
@@ -166,6 +155,8 @@ export class IvyPinch {
             this.updateInitialValues();
             this.eventType = undefined;
         }
+
+        this.touches.removeEventListeners("mousemove", "handleMousemove");
     }
 
 
@@ -174,7 +165,7 @@ export class IvyPinch {
      */
 
     handlePan = (event: any) => {
-        if (this.scale < this.properties.minPanScale || this.properties.disablePan) {
+        if (this.scale < this.minPanScale || this.properties.disablePan) {
             return;
         }
 
@@ -199,7 +190,7 @@ export class IvyPinch {
         }
 
         /* mousemove */
-        if (event.type === "mousemove" && this.scale > this.properties.minPanScale) {
+        if (event.type === "mousemove" && this.scale > this.minPanScale) {
             this.centeringImage();
         }
 
@@ -311,25 +302,6 @@ export class IvyPinch {
 
             this.moveX = -Math.abs((moveXRatio * (newImageWidth - imageWidth)));
             this.moveY = -Math.abs((-moveYRatio * (newImageHeight - imageHeight)));
-        }
-    }
-
-    getLimitZoom() {
-        if (this.properties.limitZoom === "original image size") {
-            if (this.elementTarget === "IMG") {
-                let img = this.element.getElementsByTagName("img")[0];
-
-                if (img.naturalWidth && img.offsetWidth) {
-                    this.maxScale = img.naturalWidth / img.offsetWidth;
-                    return this.maxScale;
-                }
-            } else {
-                this.maxScale = this.maxHtmlContentScale;
-                return this.maxScale;
-            }
-        } else {
-            this.maxScale = this.properties.limitZoom || 0;
-            return this.maxScale;
         }
     }
 
@@ -579,14 +551,39 @@ export class IvyPinch {
             return imgHeight > this.parentElement.offsetHeight ||
                 imgWidth > this.parentElement.offsetWidth;
         }
+
+        return undefined;
     }
 
-    pollLimitZoom() {
+    detectLimitZoom() {
+        this.maxScale = this.defaultMaxScale;
+
+        if (this.properties.limitZoom === "original image size" &&
+            this.elementTarget === "IMG") {
+            // We are waiting for the element with the image to be available
+            this.pollLimitZoomForOriginalImage();
+        }
+    }
+
+    pollLimitZoomForOriginalImage() {
         let poll = setInterval(() => {
-            if (this.getLimitZoom()) {
+            let maxScaleForOriginalImage = this.getMaxScaleForOriginalImage();
+            if (typeof maxScaleForOriginalImage === 'number') {
+                this.maxScale = maxScaleForOriginalImage;
                 clearInterval(poll);
             }
         }, 10);
+    }
+
+    getMaxScaleForOriginalImage() {
+        let maxScale!:number;
+        let img = this.element.getElementsByTagName("img")[0];
+
+        if (img.naturalWidth && img.offsetWidth) {
+            maxScale = img.naturalWidth / img.offsetWidth;
+        }
+
+        return maxScale;
     }
 
     getImageElement() {
@@ -663,5 +660,13 @@ export class IvyPinch {
     destroy() {
         this.removeBasicStyles();
         this.touches.destroy();
+    }
+
+    getPropertiesValue(propertyName:PropertyName) {
+        if (this.properties && this.properties[propertyName]) {
+            return this.properties[propertyName]
+        } else {
+            return defaultProperties[propertyName];
+        }
     }
 }

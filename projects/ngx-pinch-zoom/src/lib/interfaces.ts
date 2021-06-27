@@ -1,23 +1,23 @@
 export interface Properties {
-    "transition-duration"?: number;
-    "double-tap"?: boolean;
-    "double-tap-scale"?: number;
-    "auto-zoom-out"?: boolean;
-    "limit-zoom"?: number | "original image size";
-    "disabled"?: number;
-    "element"?: string;
-    "disablePan"?: boolean;
-    "overflow"?: "hidden" | "visible";
-    "disableZoomControl"?: "disable" | "never" | "auto";
-    "zoomControlScale"?: number;
-    "backgroundColor"?: string;
-    "limitPan"?: boolean;
-    "minPanScale"?: number;
-    "minScale"?: number;
-    "eventHandler"?: any;
-    "listeners"?: "auto" | "mouse and touch";
-    "wheel"?: boolean;
-    "autoHeight"?: boolean;
-    "wheelZoomFactor"?: number;
-    "draggableImage"?: boolean;
+    element ? : string;
+    doubleTap ? : boolean;
+    doubleTapScale ? : number;
+    zoomControlScale ? : number;
+    transitionDuration ? : number;
+    autoZoomOut ? : boolean;
+    limitZoom ? : number | string | "original image size";
+    disablePan ? : boolean;
+    limitPan ? : boolean;
+    minPanScale ? : number;
+    minScale ? : number;
+    eventHandler ? : any;
+    listeners ? : string | "auto" | "mouse and touch";
+    wheel ? : boolean;
+    fullImage ? : {
+        path: string,
+        minScale?: number
+    };
+    autoHeight ? : boolean;
+    wheelZoomFactor ? : number;
+    draggableImage ? : boolean;
 }

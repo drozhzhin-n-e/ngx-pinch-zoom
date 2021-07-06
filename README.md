@@ -67,7 +67,7 @@ See the full documentation and examples on the [home page](http://ivylab.space/p
 
 ## Author services
 
-Are you interested in a library but lacks features? Write to the author, he can do it for you.
+Are you interested in this library but lacks features? Write to the author, he can do it for you.
 
 ## Sponsors
 

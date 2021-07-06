@@ -65,9 +65,9 @@ For use, put your image inside the &lt;pinch-zoom&gt; container. Please, pay att
 
 See the full documentation and examples on the [home page](http://ivylab.space/pinch-zoom).
 
-## Browser support
+## Author services
 
-Pinch Zoom supports the most recent two versions of all major browsers: Chrome (including Android 4.4-10), Firefox, Safari (including iOS 9-13), and Edge.
+Are you interested in a library but lacks features? Write to the author, he can do it for you.
 
 ## Sponsors
 

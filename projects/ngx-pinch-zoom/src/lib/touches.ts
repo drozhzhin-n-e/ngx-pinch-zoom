@@ -28,19 +28,19 @@ export class Touches {
     isMousedown = false;
 
     _touchListeners: any = {
-        "touchstart": "handleTouchstart",
-        "touchmove": "handleTouchmove",
-        "touchend": "handleTouchend"
-    }
+        touchstart: 'handleTouchstart',
+        touchmove: 'handleTouchmove',
+        touchend: 'handleTouchend',
+    };
     _mouseListeners: any = {
-        "mousedown": "handleMousedown",
-        "mousemove": "handleMousemove",
-        "mouseup": "handleMouseup",
-        "wheel": "handleWheel"
-    }
+        mousedown: 'handleMousedown',
+        mousemove: 'handleMousemove',
+        mouseup: 'handleMouseup',
+        wheel: 'handleWheel',
+    };
     _otherListeners: any = {
-        "resize": "handleResize"
-    }
+        resize: 'handleResize',
+    };
 
     get touchListeners() {
         return this.properties.touchListeners ? this.properties.touchListeners : this._touchListeners;
@@ -83,22 +83,22 @@ export class Touches {
             const handler: MouseHandler = listeners[listener];
 
             // Window
-            if (listener === "resize") {
+            if (listener === 'resize') {
                 if (action === 'addEventListener') {
                     window.addEventListener(listener, this[handler], false);
                 }
                 if (action === 'removeEventListener') {
                     window.removeEventListener(listener, this[handler], false);
                 }
-            // Document
-            } else if (listener === 'mouseup' || listener === "mousemove") {
+                // Document
+            } else if (listener === 'mouseup' || listener === 'mousemove') {
                 if (action === 'addEventListener') {
                     document.addEventListener(listener, this[handler], false);
                 }
                 if (action === 'removeEventListener') {
                     document.removeEventListener(listener, this[handler], false);
                 }
-            // Element
+                // Element
             } else {
                 if (action === 'addEventListener') {
                     this.element.addEventListener(listener, this[handler], false);
@@ -134,9 +134,8 @@ export class Touches {
             this.getTouchstartPosition(event);
         }
 
-        this.runHandler("touchstart", event);
-    }
-
+        this.runHandler('touchstart', event);
+    };
 
     /* Touchmove */
 
@@ -145,14 +144,14 @@ export class Touches {
 
         // Pan
         if (this.detectPan(touches)) {
-            this.runHandler("pan", event);
+            this.runHandler('pan', event);
         }
 
         // Pinch
         if (this.detectPinch(event)) {
-            this.runHandler("pinch", event);
+            this.runHandler('pinch', event);
         }
-    }
+    };
 
     handleLinearSwipe(event: any) {
         //event.preventDefault();
@@ -172,7 +171,6 @@ export class Touches {
         }
     }
 
-
     /* Touchend */
 
     handleTouchend = (event: any) => {
@@ -180,21 +178,20 @@ export class Touches {
 
         // Double Tap
         if (this.detectDoubleTap()) {
-            this.runHandler("double-tap", event);
+            this.runHandler('double-tap', event);
         }
 
         // Tap
         this.detectTap();
 
-        this.runHandler("touchend", event);
+        this.runHandler('touchend', event);
         this.eventType = 'touchend';
 
         if (touches && touches.length === 0) {
             this.eventType = undefined;
             this.i = 0;
         }
-    }
-
+    };
 
     /* Mousedown */
 
@@ -207,69 +204,62 @@ export class Touches {
             this.getMousedownPosition(event);
         }
 
-        this.runHandler("mousedown", event);
-    }
-
+        this.runHandler('mousedown', event);
+    };
 
     /* Mousemove */
 
     handleMousemove = (event: any) => {
         //event.preventDefault();
-        
+
         if (!this.isMousedown) {
             return;
         }
 
         // Pan
-        this.runHandler("pan", event);
+        this.runHandler('pan', event);
 
         // Linear swipe
         switch (this.detectLinearSwipe(event)) {
-            case "horizontal-swipe":
-                event.swipeType = "horizontal-swipe";
-                this.runHandler("horizontal-swipe", event);
+            case 'horizontal-swipe':
+                event.swipeType = 'horizontal-swipe';
+                this.runHandler('horizontal-swipe', event);
                 break;
-            case "vertical-swipe":
-                event.swipeType = "vertical-swipe";
-                this.runHandler("vertical-swipe", event);
+            case 'vertical-swipe':
+                event.swipeType = 'vertical-swipe';
+                this.runHandler('vertical-swipe', event);
                 break;
         }
 
         // Linear swipe
-        if (this.detectLinearSwipe(event) ||
-            this.eventType === 'horizontal-swipe' ||
-            this.eventType === 'vertical-swipe') {
-
+        if (this.detectLinearSwipe(event) || this.eventType === 'horizontal-swipe' || this.eventType === 'vertical-swipe') {
             this.handleLinearSwipe(event);
         }
-    }
-
+    };
 
     /* Mouseup */
 
     handleMouseup = (event: any) => {
-
         // Tap
         this.detectTap();
 
         this.isMousedown = false;
-        this.runHandler("mouseup", event);
+        this.runHandler('mouseup', event);
         this.eventType = undefined;
         this.i = 0;
-    }
-
+    };
 
     /* Wheel */
 
     handleWheel = (event: any) => {
-        this.runHandler("wheel", event);
-    }
+        this.runHandler('wheel', event);
+    };
 
     /* Resize */
 
     handleResize = (event: any) => {
-        this.runHandler("resize", event);
-    }
+        this.runHandler('resize', event);
+    };
 
     runHandler(eventName: any, response: any) {
         if (this.handlers[eventName]) {
@@ -277,13 +267,12 @@ export class Touches {
         }
     }
 
-
     /*
      * Detection
      */
 
     detectPan(touches: any) {
-        return touches.length === 1 && !this.eventType || this.eventType === 'pan';
+        return (touches.length === 1 && !this.eventType) || this.eventType === 'pan';
     }
 
     detectDoubleTap() {
@@ -318,9 +307,9 @@ export class Touches {
 
         if (tapLength > 0) {
             if (tapLength < this.tapMinTimeout) {
-                this.runHandler("tap", {});
+                this.runHandler('tap', {});
             } else {
-                this.runHandler("longtap", {});
+                this.runHandler('longtap', {});
             }
         }
     }
@@ -334,7 +323,7 @@ export class Touches {
         const touches = event.touches;
 
         if (touches) {
-            if (touches.length === 1 && !this.eventType || this.eventType === 'horizontal-swipe' || this.eventType === 'vertical-swipe') {
+            if ((touches.length === 1 && !this.eventType) || this.eventType === 'horizontal-swipe' || this.eventType === 'vertical-swipe') {
                 return this.getLinearSwipeType(event);
             }
         } else {
@@ -351,7 +340,7 @@ export class Touches {
             const movementX = Math.abs(this.moveLeft(0, event) - this.startX);
             const movementY = Math.abs(this.moveTop(0, event) - this.startY);
 
-            if ((movementY * 3) > movementX) {
+            if (movementY * 3 > movementX) {
                 return 'vertical-swipe';
             } else {
                 return 'horizontal-swipe';
@@ -397,11 +386,11 @@ export class Touches {
 
     detectTouchScreen() {
         var prefixes = ' -webkit- -moz- -o- -ms- '.split(' ');
-        var mq = function(query: any) {
+        var mq = function (query: any) {
             return window.matchMedia(query).matches;
-        }
+        };
 
-        if (('ontouchstart' in window)) {
+        if ('ontouchstart' in window) {
             return true;
         }
 
@@ -410,7 +399,6 @@ export class Touches {
         var query = ['(', prefixes.join('touch-enabled),('), 'heartz', ')'].join('');
         return mq(query);
     }
-
 
     /* Public properties and methods */
     on(event: EventType, handler: Function) {

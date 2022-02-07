@@ -11,20 +11,12 @@
         "moduleResolution": "node",
         "importHelpers": true,
         "paths": {
-            "ngx-pinch-zoom": [
-                "dist/ngx-pinch-zoom/ngx-pinch-zoom",
-                "dist/ngx-pinch-zoom"
-            ]
+            "ngx-pinch-zoom": ["dist/ngx-pinch-zoom/ngx-pinch-zoom", "dist/ngx-pinch-zoom"]
         },
         "target": "es2015",
         "module": "es2020",
-        "lib": [
-            "es2018",
-            "dom"
-        ],
-        "types": [
-            "node"
-        ]
+        "lib": ["es2018", "dom"],
+        "types": ["node"]
     },
     "angularCompilerOptions": {
         "enableI18nLegacyMessageIdFormat": false

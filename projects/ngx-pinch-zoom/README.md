@@ -1,3 +1,7 @@
+# Note
+
+This Project has been forked to update to the newest Angular 13 Version.
+
 # Pinch zoom for Angular
 
 <img src="https://badgen.net/bundlephobia/min/ngx-pinch-zoom" />
@@ -13,13 +17,13 @@ Live demos and source code samples can be found on [home page](http://ivylab.spa
 Install the npm package.
 
 ```
-npm i ngx-pinch-zoom
+npm i @meddv/ngx-pinch-zoom
 ```
 
 Import module:
 
 ```ts
-import { PinchZoomModule } from 'ngx-pinch-zoom';
+import { PinchZoomModule } from '@meddv/ngx-pinch-zoom';
 
 @NgModule({
     imports: [ PinchZoomModule ]
@@ -71,6 +75,10 @@ See the full documentation and examples on the [home page](http://ivylab.space/p
 ## Author services
 
 Are you interested in this library but lacks features? [Write to the author](https://github.com/drozhzhin-n-e), he can do it for you.
+
+## Contributor services
+
+Contact us over our Issue Tracker.
 
 ## Sponsors
 

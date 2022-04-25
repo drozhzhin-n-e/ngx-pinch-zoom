@@ -1,6 +1,6 @@
 {
   "name": "@meddv/ngx-pinch-zoom",
-  "version": "13.3.2",
+  "version": "13.3.3",
   "description": "Pinch zoom component for Angular 13.",
   "repository": {
     "type": "git",
@@ -36,11 +36,10 @@
     "url": "https://github.com/konstantinschuette/ngx-pinch-zoom/issues"
   },
   "peerDependencies": {
-
+      "@angular/common": "~13.3.2",
+      "@angular/core": "~13.3.2"
   },
   "dependencies": {
     "tslib": "^2.0.0",
-    "@angular/common": "~13.3.2",
-    "@angular/core": "~13.3.2"
   }
 }

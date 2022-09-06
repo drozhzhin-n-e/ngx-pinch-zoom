@@ -1,5 +1,5 @@
 {
-  "name": "ngx-pinch-zoom",
+  "name": "@olafvv/ngx-pinch-zoom",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",

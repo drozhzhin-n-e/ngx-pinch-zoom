@@ -36,8 +36,8 @@
     "url": "https://github.com/konstantinschuette/ngx-pinch-zoom/issues"
   },
   "peerDependencies": {
-      "@angular/common": "^14.2.0",
-      "@angular/core": "^14.2.0"
+      "@angular/common": "^14.2.5",
+      "@angular/core": "^14.2.5"
   },
   "dependencies": {
     "tslib": "^2.0.0"

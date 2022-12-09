@@ -1,6 +1,6 @@
 # Note
 
-This Project has been forked to update to the newest Angular 13 Version.
+This Project has been forked to update to the newest Angular 15 Version.
 
 # Pinch zoom for Angular
 

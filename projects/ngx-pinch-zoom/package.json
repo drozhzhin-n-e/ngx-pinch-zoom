@@ -1,7 +1,7 @@
 {
   "name": "@meddv/ngx-pinch-zoom",
-  "version": "14.0.1",
-  "description": "Pinch zoom component for Angular 14.",
+  "version": "15.0.0",
+  "description": "Pinch zoom component for Angular 15.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/konstantinschuette/ngx-pinch-zoom"
@@ -25,7 +25,7 @@
   "homepage": "http://ivylab.space/pinch-zoom",
   "keywords": [
     "Angular",
-    "Angular 14",
+    "Angular 15",
     "ngx",
     "Pinch zoom",
     "Image zoom",
@@ -36,8 +36,8 @@
     "url": "https://github.com/konstantinschuette/ngx-pinch-zoom/issues"
   },
   "peerDependencies": {
-      "@angular/common": "^14.0.0",
-      "@angular/core": "^14.0.0"
+      "@angular/common": "^15.0.0",
+      "@angular/core": "^15.0.0"
   },
   "dependencies": {
     "tslib": "^2.0.0"

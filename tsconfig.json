@@ -16,7 +16,7 @@
         "dist/ngx-pinch-zoom"
       ]
     },
-    "target": "es2015",
+    "target": "es2020",
     "module": "es2020",
     "lib": [
       "es2018",

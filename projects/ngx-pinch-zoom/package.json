@@ -1,10 +1,10 @@
 {
   "name": "@meddv/ngx-pinch-zoom",
-  "version": "15.0.1",
-  "description": "Pinch zoom component for Angular 15.",
+  "version": "16.0.0",
+  "description": "Pinch zoom component for Angular 16.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/konstantinschuette/ngx-pinch-zoom"
+    "url": "git+https://github.com/medDV-GmbH/ngx-pinch-zoom"
   },
   "author": {
     "name": "Nikita Drozhzhin",
@@ -22,10 +22,10 @@
             "url": "https://www.meddv.de"
         }
     ],
-  "homepage": "http://ivylab.space/pinch-zoom",
+  "homepage": "http://www.meddv.de",
   "keywords": [
     "Angular",
-    "Angular 15",
+    "Angular 16",
     "ngx",
     "Pinch zoom",
     "Image zoom",
@@ -33,11 +33,11 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/konstantinschuette/ngx-pinch-zoom/issues"
+    "url": "https://github.com/medDV-GmbH/ngx-pinch-zoom/issues"
   },
   "peerDependencies": {
-      "@angular/common": "^15.0.0",
-      "@angular/core": "^15.0.0"
+      "@angular/common": "^16.0.0",
+      "@angular/core": "^16.0.0"
   },
   "dependencies": {
     "tslib": "^2.0.0"

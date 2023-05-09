@@ -14,7 +14,7 @@ Live demos and source code samples can be found on [home page](http://ivylab.spa
 Install the npm package.
 
 ```
-npm i ngx-pinch-zoom
+npm i @meddv/ngx-pinch-zoom
 ```
 
 Import module:

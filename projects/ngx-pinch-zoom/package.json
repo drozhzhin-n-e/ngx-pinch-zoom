@@ -1,7 +1,7 @@
 {
   "name": "@meddv/ngx-pinch-zoom",
   "version": "17.0.0",
-  "description": "Pinch zoom component for Angular 16.",
+  "description": "Pinch zoom component for Angular 17.",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/medDV-GmbH/ngx-pinch-zoom"

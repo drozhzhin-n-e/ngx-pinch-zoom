@@ -1,6 +1,6 @@
 {
   "name": "ngx-pinch-zoom",
-  "version": "14.0.7",
+  "version": "17.0.1",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",

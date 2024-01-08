@@ -48,6 +48,8 @@ export class IvyPinch {
             return;
         }
 
+        if(typeof properties.limitZoom === 'number')
+            this.maxScale = properties.limitZoom;
         this.elementTarget = this.element.querySelector('*').tagName;
         this.parentElement = this.element.parentElement;
         this.properties = Object.assign({}, defaultProperties, properties);
@@ -541,7 +543,8 @@ export class IvyPinch {
     }
 
     detectLimitZoom() {
-        this.maxScale = this.defaultMaxScale;
+        // Assign to default only if it is not passed through constructor
+        this.maxScale ??= this.defaultMaxScale;
 
         if (this.properties.limitZoom === 'original image size' && this.elementTarget === 'IMG') {
             // We are waiting for the element with the image to be available

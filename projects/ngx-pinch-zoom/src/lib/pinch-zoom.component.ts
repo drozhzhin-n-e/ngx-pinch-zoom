@@ -232,6 +232,7 @@ export class PinchZoomComponent implements OnDestroy {
             return;
         }
 
+        this.properties.limitZoom = this.limitZoom;
         this.properties['element'] = this.elementRef.nativeElement.querySelector('.pinch-zoom-content');
         this.pinchZoom = new IvyPinch(this.properties);
     }

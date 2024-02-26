@@ -1,29 +1,25 @@
 /* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "compileOnSave": false,
-  "compilerOptions": {
-    "baseUrl": "./",
-    "outDir": "./dist/out-tsc",
-    "sourceMap": true,
-    "declaration": false,
-    "downlevelIteration": true,
-    "experimentalDecorators": true,
-    "moduleResolution": "node",
-    "importHelpers": true,
-    "paths": {
-      "ngx-pinch-zoom": [
-        "dist/ngx-pinch-zoom/ngx-pinch-zoom",
-        "dist/ngx-pinch-zoom"
-      ]
+    "compileOnSave": false,
+    "compilerOptions": {
+        "baseUrl": "./",
+        "outDir": "./dist/out-tsc",
+        "sourceMap": true,
+        "declaration": false,
+        "downlevelIteration": true,
+        "experimentalDecorators": true,
+        "moduleResolution": "node",
+        "importHelpers": true,
+        "paths": {
+            "ngx-pinch-zoom": ["dist/ngx-pinch-zoom/ngx-pinch-zoom", "dist/ngx-pinch-zoom"]
+        },
+        "target": "ES2022",
+        "module": "es2020",
+        "lib": ["es2018", "dom"],
+        "types": ["node"],
+        "useDefineForClassFields": false
     },
-    "target": "es2015",
-    "module": "es2020",
-    "lib": [
-      "es2018",
-      "dom"
-    ]
-  },
-  "angularCompilerOptions": {
-    "enableI18nLegacyMessageIdFormat": false
-  }
+    "angularCompilerOptions": {
+        "enableI18nLegacyMessageIdFormat": false
+    }
 }

@@ -1,32 +1,43 @@
 {
-  "name": "ngx-pinch-zoom",
-  "version": "2.5.5",
-  "description": "Pinch zoom component for Angular.",
+  "name": "@meddv/ngx-pinch-zoom",
+  "version": "17.0.1",
+  "description": "Pinch zoom component for Angular 17.",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/drozhzhin-n-e/ngx-pinch-zoom.git"
+    "url": "git+https://github.com/medDV-GmbH/ngx-pinch-zoom"
   },
   "author": {
     "name": "Nikita Drozhzhin",
     "email": "drozhzhin.n.e@gmail.com"
   },
-  "homepage": "http://ivylab.space/pinch-zoom",
+    "contributors": [
+        {
+            "name": "Konstantin Schütte",
+            "email": "team-web@meddv.de",
+            "url": "https://www.meddv.de"
+        },
+        {
+            "name": "Björn Schmidt",
+            "email": "team-web@meddv.de",
+            "url": "https://www.meddv.de"
+        }
+    ],
+  "homepage": "http://www.meddv.de",
   "keywords": [
     "Angular",
-    "Angular 2",
+    "Angular 17",
     "ngx",
-    "ng2",
     "Pinch zoom",
     "Image zoom",
     "Touch image zoom"
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/drozhzhin-n-e/ngx-pinch-zoom/issues"
+    "url": "https://github.com/medDV-GmbH/ngx-pinch-zoom/issues"
   },
   "peerDependencies": {
-    "@angular/common": "^11.1.2",
-    "@angular/core": "^11.1.2"
+      "@angular/common": "^17.0.0",
+      "@angular/core": "^17.0.0"
   },
   "dependencies": {
     "tslib": "^2.0.0"

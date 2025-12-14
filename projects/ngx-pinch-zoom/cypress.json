@@ -1,0 +1,9 @@
+{
+    "integrationFolder": "projects/ngx-pinch-zoom/cypress/integration",
+    "supportFile": "projects/ngx-pinch-zoom/cypress/support/index.ts",
+    "videosFolder": "projects/ngx-pinch-zoom/cypress/videos",
+    "screenshotsFolder": "projects/ngx-pinch-zoom/cypress/screenshots",
+    "pluginsFile": "projects/ngx-pinch-zoom/cypress/plugins/index.ts",
+    "fixturesFolder": "projects/ngx-pinch-zoom/cypress/fixtures",
+    "baseUrl": "http://localhost:4200"
+}

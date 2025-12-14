@@ -1,0 +1,9 @@
+package.json
+package-lock.json
+yarn.lock
+dist
+node_modules
+build
+res
+coverage
+libs/svg-management/src/lib/svg-canvas-editor/svg-canvas-editor.component.stories.ts
